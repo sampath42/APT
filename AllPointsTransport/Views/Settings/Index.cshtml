@@ -1,0 +1,30 @@
+﻿@model IEnumerable<APT.BusinessObjects.Models.Setting>
+
+@{
+    ViewBag.Title = "Settings Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="text-align:center">Settings</h2>
+<div id="settings_nav_pane">
+    @Html.DevExpress().PageControl(settings =>
+{
+    settings.Name = "SettingsIndexTab";
+    settings.ControlStyle.CssClass = "nav nav-tabs";
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.TabAlign = TabAlign.Justify;
+    settings.TabPages.Add("Rate Settings").SetContent(() =>
+    {
+        ViewContext.Writer.Write(Html.Action("RateSettingsGridViewPartial"));
+    });
+    settings.TabPages.Add("Fuel Surcharge Settings").SetContent(() =>
+    {
+        ViewContext.Writer.Write(Html.Action("FuelSettingsGridViewPartial"));
+    });
+    settings.TabPages.Add("Additional Item Settings").SetContent(() =>
+    {
+        ViewContext.Writer.Write(Html.Action("AdditionalItemsGridViewPartial"));
+    });
+}).GetHtml()
+</div>
+

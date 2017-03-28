@@ -1,0 +1,56 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "ScheduleGridView";
+        settings.CallbackRouteValues = new { Controller = "Dispatch", Action = "ScheduleGridViewPartial" };
+
+				settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Dispatch", Action = "ScheduleGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Dispatch", Action = "ScheduleGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Dispatch", Action = "ScheduleGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+		settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+		settings.KeyFieldName = "ID";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+		settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+		settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+		settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+		settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+		settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+				settings.Columns.Add("ID");
+				settings.Columns.Add("MondayDate");
+				settings.Columns.Add("Driver");
+				settings.Columns.Add("MondayLocal");
+				settings.Columns.Add("MondayRegional");
+				settings.Columns.Add("TuesdayLocal");
+				settings.Columns.Add("TuesdayRegional");
+				settings.Columns.Add("WednesdayLocal");
+				settings.Columns.Add("WednesdayRegional");
+				settings.Columns.Add("ThursdayLocal");
+				settings.Columns.Add("ThursdayRegional");
+				settings.Columns.Add("FridayLocal");
+				settings.Columns.Add("FridayRegional");
+				settings.Columns.Add("SaturdayLocal");
+				settings.Columns.Add("SaturdayRegional");
+				settings.Columns.Add("SundayLocal");
+				settings.Columns.Add("SundayRegional");
+				settings.Columns.Add("DateCreated");
+				settings.Columns.Add("CreatedBy");
+				settings.Columns.Add("DateUpdated");
+				settings.Columns.Add("UpdatedBy");
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

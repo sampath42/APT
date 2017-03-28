@@ -1,0 +1,43 @@
+﻿@model APT.BusinessObjects.Models.TemplatesWO
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.ActionLink("Add Template", "Create")
+<div class="row">
+
+    <div class="span12">
+
+        <div class="widget">
+
+            <div class="widget-header">
+                <i class="icon-tasks"></i>
+                <h3>Templates List</h3>
+            </div> <!-- /widget-header -->
+
+            <div class="widget-content" style="overflow: scroll">
+
+
+                @Html.Action("TemplateGridViewPartial")
+
+
+
+
+
+               
+                @* <canvas id="pie-chart" class="chart-holder" height="250" width="538"></canvas>*@
+            </div> <!-- /widget-content -->
+
+        </div> <!-- /widget -->
+
+
+
+
+    </div> <!-- /span6 -->
+
+</div>
+
+

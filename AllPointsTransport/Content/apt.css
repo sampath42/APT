@@ -1,0 +1,16 @@
+﻿body {
+}
+
+.tabledesign {
+    border: 2px solid black;
+}
+
+.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+span[id^="GridLookupRQ_DDD_gv_DXSelBtn"]{
+    display:none !important;
+}

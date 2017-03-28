@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllPointsTransport", "AllPointsTransport\AllPointsTransport.csproj", "{CE9F2718-1793-467A-A99E-2E2BB5F96428}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APT.BusinessObjects", "APT.BusinessObjects\APT.BusinessObjects.csproj", "{AF0CD2ED-B577-4824-A846-48150AFD6DFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APT.WebApi", "APT.WebApi\APT.WebApi.csproj", "{2DE19D3D-E028-4712-B74F-56B08FAEA9C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE9F2718-1793-467A-A99E-2E2BB5F96428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE9F2718-1793-467A-A99E-2E2BB5F96428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE9F2718-1793-467A-A99E-2E2BB5F96428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE9F2718-1793-467A-A99E-2E2BB5F96428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0CD2ED-B577-4824-A846-48150AFD6DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0CD2ED-B577-4824-A846-48150AFD6DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0CD2ED-B577-4824-A846-48150AFD6DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0CD2ED-B577-4824-A846-48150AFD6DFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE19D3D-E028-4712-B74F-56B08FAEA9C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE19D3D-E028-4712-B74F-56B08FAEA9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE19D3D-E028-4712-B74F-56B08FAEA9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE19D3D-E028-4712-B74F-56B08FAEA9C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

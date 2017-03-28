@@ -1,0 +1,70 @@
+﻿@model AllPointsTransport.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";    
+}
+
+<style>
+    .form-signin {
+    margin: 0 auto;
+    max-width: 1000px;
+    
+}
+</style>
+
+<div class="container-fluid">
+
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="container">
+            <div class="form-horizontal">
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div class="col-lg-6" style="float:left;width:50%">
+                    <fieldset>
+                        <h1><i><font face="Algerian">Welcome</font></i></h1>
+                        <br />
+                        <h1><i><font face="Algerian">To</font></i></h1>
+                        <br />
+                        <h1><i><font face="Algerian">All Points Transport</font></i></h1>
+                    </fieldset>
+                </div>
+                <div class="col-lg-6" style="float:right;width:50%;">
+                    <fieldset>
+                        
+                        
+                            <h2 class="form-signin-heading">Please Sign In</h2>                            
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "UserName" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                            <br />
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            <label class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                Remember me
+                            </label>
+                            <input type="submit" value="Log in" class="btn btn-lg btn-primary btn-block" />
+</fieldset>
+                    </div>                
+                </div>
+            </div>
+                        }
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                </div>                            

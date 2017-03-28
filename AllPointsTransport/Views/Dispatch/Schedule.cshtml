@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Schedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12" style="overflow-x:scroll">
+            @Html.Action("DriverPayGridViewPartial")
+        </div>
+    </div>
+    <div class="row" style="padding-top:25px;">
+        <div style="float:left;width:auto;overflow:auto;">
+            @Html.DevExpress().Calendar(settings =>
+       {
+           settings.Name = "SchedulerCalendar";
+           settings.SelectedDate = DateTime.Today;
+       }).GetHtml()
+        </div>
+        <div style="float:left;max-width:70%;overflow:auto;margin-left:25px;">
+                @Html.Action("ScheduleGridViewPartial")
+        </div>
+    </div>
+  
+</div>
+

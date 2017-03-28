@@ -1,0 +1,397 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "DriverPayGridView";
+        settings.CallbackRouteValues = new { Controller = "WorkOrders", Action = "DriverPayGridViewPartial", WorkOrderNo = String.IsNullOrWhiteSpace(Convert.ToString(ViewBag.WorkOrder)) ? "0" : Convert.ToString(ViewBag.WorkOrder) };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "WorkOrders", Action = "DriverPayGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "WorkOrders", Action = "DriverPayGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "WorkOrders", Action = "DriverPayGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.AlternatingRow.BackColor = System.Drawing.ColorTranslator.FromHtml("#ccc");
+        // settings.Columns.Add("DispatchNotes");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "ApptTime";
+        //    column.Caption = "ApptTime";
+
+        //    column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    //comboBoxProperties.TextField = "ApptTime";
+        //    //comboBoxProperties.ValueField = "ApptTime";
+        //    //comboBoxProperties.ValueType = typeof(DateTime);
+        //});
+
+        // settings.Columns.Add("ApptTime");
+        // settings.Columns.Add("Origin");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Origin";
+        //    column.Caption = "Origin";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "Origin";
+        //    comboBoxProperties.ValueField = "Origin";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+        //// settings.Columns.Add("Destination");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Destination";
+        //    column.Caption = "Destination";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "Destination";
+        //    comboBoxProperties.ValueField = "Destination";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+        //settings.Columns.Add("LineHaulAmountTruck");
+        //  settings.Columns.Add("FSAmountTruck");
+        // settings.Columns.Add(column =>
+        // {
+        //     column.FieldName = "FSAmountTruck";
+        //     column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+        //     column.PropertiesEdit.DisplayFormatString = "c";
+        // });
+
+        //// settings.Columns.Add("TotalAmountTruck");
+        // settings.Columns.Add(column =>
+        // {
+        //     column.FieldName = "TotalAmountTruck";
+        //     column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+        //     column.PropertiesEdit.DisplayFormatString = "c";
+        // });
+
+
+        //settings.Columns.Add("ID");
+        //settings.Columns.Add("WorkOrder");
+        //settings.Columns.Add("RowOrder");
+        //settings.Columns.Add("Status");
+
+        // settings.Columns.Add("ActiveLeg");
+        //  settings.Columns.Add("ToDispatch");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ToDispatch";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ActiveLeg";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        // settings.Columns.Add("TypeOfLoad");
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "TypeOfLoad";
+            column.Caption = "TypeOfLoad";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = ViewBag.TypeOfLoad;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+
+
+
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "TypeOfLoad";
+        //    column.Caption = "TypeOfLoad";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "TypeOfLoad";
+        //    comboBoxProperties.ValueField = "TypeOfLoad";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Duration";
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Integer;
+            column.PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        settings.Columns.Add("Driver");
+
+        settings.Columns.Add("DispatchNotes");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ApptTime";
+            column.Caption = "ApptTime";
+
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormat = EditFormat.Custom;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatInEditMode = true;
+            (column.PropertiesEdit as DateEditProperties).ClientSideEvents.DropDown = "OnDropDown";
+            (column.PropertiesEdit as DateEditProperties).DropDownButton.ClientVisible = false;
+
+
+            //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+            //comboBoxProperties.TextField = "ApptTime";
+            //comboBoxProperties.ValueField = "ApptTime";
+            //comboBoxProperties.ValueType = typeof(DateTime);
+        });
+        //  settings.Columns.Add("DetentionStarts");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "DetentionStarts";
+            column.Caption = "DetentionStarts";
+
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+            //comboBoxProperties.TextField = "ApptTime";
+            //comboBoxProperties.ValueField = "ApptTime";
+            //comboBoxProperties.ValueType = typeof(DateTime);
+        });
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Origin";
+        //    column.Caption = "Origin";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "Origin";
+        //    comboBoxProperties.ValueField = "Origin";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "Origin";
+            column.Caption = "Origin";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = ViewBag.Origin;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Destination";
+        //    column.Caption = "Destination";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "Destination";
+        //    comboBoxProperties.ValueField = "Destination";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "Destination";
+            column.Caption = "Destination";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = ViewBag.Destination;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+        //settings.Columns.Add("DepartTime");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "DepartTime";
+            column.Caption = "DepartTime";
+
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormat = EditFormat.Custom;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatInEditMode = true;
+            (column.PropertiesEdit as DateEditProperties).ClientSideEvents.DropDown = "OnDropDown";
+            (column.PropertiesEdit as DateEditProperties).ClientSideEvents.CalendarCustomDisabledDate = "";
+            (column.PropertiesEdit as DateEditProperties).DropDownButton.ClientVisible = false;
+
+
+
+
+        });
+
+        //  settings.Columns.Add("ArrivalTime");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ArrivalTime";
+            column.Caption = "ArrivalTime";
+
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormatString = "HH:mm:ss";
+            (column.PropertiesEdit as DateEditProperties).EditFormat = EditFormat.Custom;
+            (column.PropertiesEdit as DateEditProperties).DisplayFormatInEditMode = true;
+            (column.PropertiesEdit as DateEditProperties).ClientSideEvents.DropDown = "OnDropDown";
+            (column.PropertiesEdit as DateEditProperties).DropDownButton.ClientVisible = false;
+
+
+        });
+
+
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "PayType";
+        //    column.Caption = "PayType";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    //   comboBoxProperties.DataSource = NorthwindDataProvider.GetCategories();
+        //    comboBoxProperties.TextField = "PayType";
+        //    comboBoxProperties.ValueField = "PayType";
+        //    comboBoxProperties.ValueType = typeof(string);
+        //});
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "PayType";
+            column.Caption = "PayType";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = ViewBag.PayType;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+
+
+        // settings.Columns.Add("PayType");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "LineHaulAmountTruck";
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+            column.PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "FSAmountTruck";
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+            column.PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        // settings.Columns.Add("TotalAmountTruck");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "TotalAmountTruck";
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+            column.PropertiesEdit.DisplayFormatString = "c";
+        });
+
+
+
+        //settings.Columns.Add("PayType");
+        //settings.Columns.Add("DetentionStarts");
+        //settings.Columns.Add("DepartTime");
+        //settings.Columns.Add("ArrivalTime");
+        //settings.Columns.Add("LineHaulAmountTruck");
+        //settings.Columns.Add("FSAmountTruck");
+        //settings.Columns.Add("TotalAmountTruck");
+        //settings.Columns.Add("TotalAmountEmployee");
+        //settings.Columns.Add("Driver");
+        //settings.Columns.Add("DriverRowID");
+        //settings.Columns.Add("DriverType");
+        //settings.Columns.Add("TruckNum");
+        //settings.Columns.Add("TruckPayPct");
+        //settings.Columns.Add("FSDeductionPct");
+        //settings.Columns.Add("EmployeePayPct");
+        //settings.Columns.Add("Origin");
+        //settings.Columns.Add("Destination");
+        //settings.Columns.Add("Duration");
+        //settings.Columns.Add("PrePlanSent");
+        //settings.Columns.Add("CancelSent");
+        //settings.Columns.Add("DispatchAcceptedStatus");
+        //settings.Columns.Add("WayBilled");
+        //settings.Columns.Add("PayDriver");
+        //settings.Columns.Add("Outgate");
+        //settings.Columns.Add("Ingate");
+        //settings.Columns.Add("POD");
+        //settings.Columns.Add("BOL");
+        //settings.Columns.Add("ReceivedDate");
+        //settings.Columns.Add("DriverPaid");
+        //settings.Columns.Add("CommissionPaid");
+        //settings.Columns.Add("DateCreated");
+        //settings.Columns.Add("CreatedBy");
+        //settings.Columns.Add("DateUpdated");
+        //settings.Columns.Add("UpdatedBy");
+        settings.Columns.Add(column =>
+        {
+            // "FieldName" contains a unique value that does not refer to any field in the GridView's data model.  
+            column.FieldName = "WorkOrder";
+            // The column contains string values. 
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Integer;
+        });
+        // A delegate method that allows you to generate data for an unbound column. 
+        settings.CustomUnboundColumnData = (s, e) =>
+        {
+            if (e.Column.FieldName == "WorkOrder")
+            {
+                //string firstName = (e.GetListSourceFieldValue("FirstName")).ToString();
+                //string lastName = (e.GetListSourceFieldValue("LastName")).ToString();
+                e.Value = 10;
+            };
+        };
+
+        settings.ClientSideEvents.EndCallback = "LoadDefaultWorkOrder";
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

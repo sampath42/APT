@@ -1,0 +1,156 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "WOLineItemsGridView";
+        settings.CallbackRouteValues = new { Controller = "WorkOrders", Action = "WOLineItemsPartial", WorkOrderNo = String.IsNullOrWhiteSpace(Convert.ToString(ViewBag.WorkOrder)) ? "0" : Convert.ToString(ViewBag.WorkOrder) };
+
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "WorkOrders", Action = "WOLineItemsPartialAddNew" };
+        //settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "WorkOrders", Action = "WOLineItemsPartialUpdate" };
+        //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "WorkOrders", Action = "WOLineItemsPartialDelete" };
+        //settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        //settings.SettingsBehavior.ConfirmDelete = true;
+        //        settings.Columns.Add(column =>
+        //{
+        //    column.Caption = "#";
+        //    //column.SetHeaderTemplateContent(c =>
+        //    //{
+        //    //    ViewContext.Writer.Write(
+        //    //    Html.ActionLink("New", "WorkOrderViewPartialAddNew").ToHtmlString()
+        //    //    );
+        //    //});
+        //    column.SetDataItemTemplateContent(c =>
+        //    {
+        //        ViewContext.Writer.Write(
+        //        Html.ActionLink("Edit Detail", "WorkOrderExternalEditForm", new { ID = DataBinder.Eval(c.DataItem, "WorkOrderID") }).ToHtmlString()
+        //        );
+        //    });
+        //    column.Settings.AllowDragDrop = DefaultBoolean.False;
+        //    column.Settings.AllowSort = DefaultBoolean.False;
+        //    column.Width = 70;
+        //});
+        // settings.Columns.Add(column =>
+        //{
+        //    column.Caption = "#";
+        //    column.SetDataItemTemplateContent(c =>
+        //    {
+        //        ViewContext.Writer.Write(
+        //            Html.ActionLink("Edit", "Edit", new { EmployeeID = DataBinder.Eval(c.DataItem, "EmployeeID") }) + "&nbsp;" +
+        //            Html.ActionLink("Delete", "Delete", new { EmployeeID = DataBinder.Eval(c.DataItem, "EmployeeID") },
+        //                new { onclick = "return confirm('Do you really want to delete this record?')" })
+        //        );
+        //    });
+        //    column.SetHeaderTemplateContent(c =>
+        //    {
+        //        ViewContext.Writer.Write(
+        //            Html.ActionLink("New", "Create", new { ProductID = -1 }).ToHtmlString()
+        //        );
+        //    });
+        //    column.Settings.AllowDragDrop = DefaultBoolean.False;
+        //    column.Settings.AllowSort = DefaultBoolean.False;
+        //    column.Width = 70;
+        //});
+        //settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = false;
+        //settings.CommandColumn.ShowDeleteButton = false;
+        //settings.CommandColumn.ShowEditButton = false;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+
+
+
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.AlternatingRow.BackColor = System.Drawing.ColorTranslator.FromHtml("#ccc");
+
+        //settings.Columns.Add("WorkOrderLineItemID");
+        // settings.Columns.Add("WorkOrder");
+        //settings.Columns.Add("RowOrder");
+        // settings.Columns.Add("BillingItem");
+
+
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "BillingItem";
+            column.Caption = "BillingItem";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+
+            comboBoxProperties.DataSource = ViewBag.BillingItem;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+
+
+        settings.Columns.Add("Description");
+        settings.Columns.Add("Vendor");
+        //settings.Columns.Add("VendorReference");
+        settings.Columns.Add("Quantity");
+        settings.Columns.Add("Rate");
+       
+        //   settings.Columns.Add("Amount");
+
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Amount";
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+            column.PropertiesEdit.DisplayFormatString = "c";
+            column.Width = 50;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            // "FieldName" contains a unique value that does not refer to any field in the GridView's data model.  
+            column.FieldName = "WorkOrder";
+            // The column contains string values. 
+            column.UnboundType = DevExpress.Data.UnboundColumnType.Integer;
+            column.Width = 50;
+
+        });
+        // A delegate method that allows you to generate data for an unbound column. 
+        settings.CustomUnboundColumnData = (s, e) =>
+        {
+            if (e.Column.FieldName == "WorkOrder")
+            {
+                //string firstName = (e.GetListSourceFieldValue("FirstName")).ToString();
+                //string lastName = (e.GetListSourceFieldValue("LastName")).ToString();
+                e.Value = 10;
+            };
+        };
+
+        //settings.Columns.Add("Fee");
+        //settings.Columns.Add("PayDriver");
+        //settings.Columns.Add("DateCreated");
+        //settings.Columns.Add("CreatedBy");
+        //settings.Columns.Add("DateUpdated");
+        //settings.Columns.Add("UpdatedBy");
+
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Amount").DisplayFormat = "c";
+        settings.Settings.ShowFooter = true;
+        settings.ClientSideEvents.EndCallback = "LoadDefaultWorkOrder";
+
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

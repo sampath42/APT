@@ -1,0 +1,288 @@
+@{
+
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView";
+
+        settings.CallbackRouteValues = new { Controller = "WorkOrders", Action = "WorkOrderViewPartial" };
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "#";
+            //column.SetHeaderTemplateContent(c =>
+            //{
+            //    ViewContext.Writer.Write(
+            //    Html.ActionLink("New", "WorkOrderViewPartialAddNew").ToHtmlString()
+            //    );
+            //});
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write(
+                Html.ActionLink("Edit Detail", "WorkOrderExternalEditForm", new { ID = DataBinder.Eval(c.DataItem, "WorkOrderID") }).ToHtmlString()
+                );
+            });
+            column.Settings.AllowDragDrop = DefaultBoolean.False;
+            column.Settings.AllowSort = DefaultBoolean.False;
+            column.Width = 70;
+        });
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "WorkOrders", Action = "WorkOrderViewPartialAddNew" };
+        //settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "WorkOrders", Action = "WorkOrderViewPartialUpdate" };
+        //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "WorkOrders", Action = "WorkOrderViewPartialDelete" };
+        //settings.SettingsEditing.Mode = GridViewEditingMode.Inline;
+        //settings.SettingsBehavior.ConfirmDelete = true;
+
+        //settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        //settings.CommandColumn.ShowDeleteButton = true;
+        //settings.CommandColumn.ShowEditButton = true;
+
+        settings.SettingsContextMenu.Enabled = true;
+
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "10", "20", "50" };
+
+        settings.KeyFieldName = "WorkOrderID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.AlternatingRow.BackColor = System.Drawing.ColorTranslator.FromHtml("#ccc");
+
+
+        ////DONT ERASE
+        //settings.HtmlDataCellPrepared = (sender, e) =>
+        //{
+        //    if (e.DataColumn.FieldName == "Status")
+        //    {
+        //        if (e.CellValue.ToString() == "Paid")
+        //        {
+
+        //            e.Cell.BackColor = System.Drawing.Color.Green;
+        //        }
+        //        else if (e.CellValue.ToString() == "")
+        //        {
+        //            e.Cell.BackColor = System.Drawing.Color.Blue;
+        //        }
+        //        else
+        //        {
+        //            e.Cell.BackColor = System.Drawing.Color.Brown;
+        //        }
+        //    }
+        //};
+
+
+        settings.Columns.Add("WorkOrderNo");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Completed";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add("Status");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "InvoicedDate";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "DatePaid";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add("Broker");
+        settings.Columns.Add("BillTo");
+        settings.Columns.Add("Container1");
+        settings.Columns.Add("Seal");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "StreetTurn";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add("EquipmentSize");
+        settings.Columns.Add("Chassis");
+        settings.Columns.Add("EquipmentProvider");
+        settings.Columns.Add("ChassisProvider");
+        settings.Columns.Add("Booking");
+        settings.Columns.Add("MasterBOL");
+        settings.Columns.Add("Reference");
+        settings.Columns.Add("Pro");
+        settings.Columns.Add("ApptNumber");
+        settings.Columns.Add("Release");
+        settings.Columns.Add("Weight");
+        settings.Columns.Add("PieceCount");
+        settings.Columns.Add("Commodity");
+        settings.Columns.Add("PO");
+        settings.Columns.Add("EquipmentPickup");
+        settings.Columns.Add("EquipmentReturn");
+        settings.Columns.Add("Origin");
+        settings.Columns.Add("Destination");
+        settings.Columns.Add("TypeOfMove");
+        settings.Columns.Add("Duration");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "StorageLFD";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "PerDiemLFD";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Cutoff";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ApptTime";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add("Container2");
+        settings.Columns.Add("LocationHours");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "OutgateReceipt";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "IngateReceipt";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ReadyNotification";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "NotesInvoice";
+            column.ColumnType = MVCxGridViewColumnType.Memo;
+            column.Width = 300;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "NotesPrivate";
+            column.ColumnType = MVCxGridViewColumnType.Memo;
+            column.Width = 300;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ETA";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        settings.Columns.Add("LinkedProNum");
+        settings.Columns.Add("InfoSymbol");
+        settings.Columns.Add("BilledAmount");
+
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "AcceptedByDispatch";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "RejectedByDispatch";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "POD1";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "POD2";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "BOL";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Uploaded";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+
+}
+@grid.Bind(Model).GetHtml()

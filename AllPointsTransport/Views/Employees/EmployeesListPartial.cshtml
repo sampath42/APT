@@ -1,0 +1,264 @@
+﻿
+@{
+
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "EmployeesGridView";
+
+        settings.CallbackRouteValues = new { Controller = "Employees", Action = "EmployeesListPartial" };
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+        settings.SettingsContextMenu.Enabled = true;
+
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "10", "20", "50" };
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.AlternatingRow.BackColor = System.Drawing.ColorTranslator.FromHtml("#ccc");
+
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "#";
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write(
+                    Html.ActionLink("Edit", "Edit", new { EmployeeID = DataBinder.Eval(c.DataItem, "EmployeeID") }) + "&nbsp;" +
+                    Html.ActionLink("Delete", "Delete", new { EmployeeID = DataBinder.Eval(c.DataItem, "EmployeeID") },
+                        new { onclick = "return confirm('Do you really want to delete this record?')" })
+                );
+            });
+            column.SetHeaderTemplateContent(c =>
+            {
+                ViewContext.Writer.Write(
+                    Html.ActionLink("New", "Create", new { ProductID = -1 }).ToHtmlString()
+                );
+            });
+            column.Settings.AllowDragDrop = DefaultBoolean.False;
+            column.Settings.AllowSort = DefaultBoolean.False;
+            column.Width = 70;
+        });
+        settings.Columns.Add("EmployeeID");
+        settings.Columns.Add("Username");
+        settings.Columns.Add("First");
+        settings.Columns.Add("Last");
+        settings.Columns.Add("Address1");
+        settings.Columns.Add("Address2");
+        settings.Columns.Add("City");
+        settings.Columns.Add("State");
+        settings.Columns.Add("Zip");
+        settings.Columns.Add("Phone");
+        settings.Columns.Add("Fax");
+        settings.Columns.Add("Email");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrContacts";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrDrivers";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrEmployees";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrTrucks";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrPayroll";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrWorkOrders";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrTakePayments";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrEmployees";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrPaymentTypeReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrMaintenance";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrReminders";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrInvoiceReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrFuelReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrProfitLossReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrProfitLossReportTruck";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrTrailers";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrTripLog";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrFuelExpenseLog";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrTripReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrPrePayrollReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "scrPayrollReport";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });        
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "CategoryID";
+        //    column.Caption = "Category";
+
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = Model;
+        //    comboBoxProperties.TextField = "CategoryName";
+        //    comboBoxProperties.ValueField = "CategoryID";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+        //settings.Columns.Add("QuantityPerUnit");
+        //settings.Columns.Add("UnitPrice").PropertiesEdit.DisplayFormatString = "c";
+        //settings.Columns.Add("UnitsInStock");
+        //settings.Columns.Add("Discontinued", MVCxGridViewColumnType.CheckBox);
+
+        settings.ClientLayout = (s, e) =>
+        {
+            if (e.LayoutMode == ClientLayoutMode.Loading)
+            {
+                if (Session["GridState"] != null)
+                    e.LayoutData = (string)Session["GridState"];
+            }
+            else
+                Session["GridState"] = e.LayoutData;
+        };
+    }).Bind(Model).GetHtml();
+
+}

@@ -1,0 +1,71 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "RQLineItems";
+        settings.CallbackRouteValues = new { Controller = "RateQuotes", Action = "RQLineItemsPartial", rateQuoteId = String.IsNullOrWhiteSpace(Convert.ToString(ViewData["RQGUID"])) ? "0" : Convert.ToString(ViewData["RQGUID"]) };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RateQuotes", Action = "RQLineItemsPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RateQuotes", Action = "RQLineItemsPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RateQuotes", Action = "RQLineItemsPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.Inline;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.Width = 720;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = false;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Left;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.CommandColumn.Width = 10;
+
+        settings.Columns.Add(settingsCol =>
+        {
+            settingsCol.Caption = "Rate Quote ID";
+            settingsCol.HeaderStyle.Font.Bold = true;
+            settingsCol.FieldName = "GUID";
+        });
+        settings.Columns.Add("RateQuoteId");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "BillingItem";
+            column.Caption = "BillingItem";
+            column.Width = 200;
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = ViewBag.BillingItem;
+            comboBoxProperties.ValueType = typeof(string);
+        });
+        settings.Columns.Add("Description");
+        settings.Columns.Add("Quantity");
+        settings.Columns.Add("Rate");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fee";
+            column.Caption = "Fee";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+        settings.Columns.Add("Amount");
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Amount").DisplayFormat = "c";
+        settings.Settings.ShowFooter = true;
+
+        settings.ClientSideEvents.EndCallback = "RQLineItemsEndCallBack";
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

@@ -1,0 +1,67 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "RQLegs";
+        settings.CallbackRouteValues = new { Controller = "RateQuotes", Action = "RQLegs", rateQuoteId = String.IsNullOrWhiteSpace(Convert.ToString(ViewData["RQGUID"])) ? "0" : Convert.ToString(ViewData["RQGUID"]) };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RateQuotes", Action = "RQLegsAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RateQuotes", Action = "RQLegsUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RateQuotes", Action = "RQLegsDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.Inline;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Id";
+
+        settings.SettingsPager.Visible = false;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Columns.Add(settingsCol =>
+        {
+            settingsCol.Caption = "Rate Quote ID";
+            settingsCol.HeaderStyle.Font.Bold = true;
+            settingsCol.FieldName = "GUID";            
+        });
+        settings.Columns.Add("RateQuoteId");
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "FROM"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "From"; });
+        settings.Columns.Add(settingsCol =>
+        {
+            settingsCol.Caption = "TO";
+            settingsCol.HeaderStyle.Font.Bold = true;
+            settingsCol.FieldName = "To";
+            settingsCol.EditorProperties().TextBox(p =>
+            {
+                p.ClientSideEvents.ValueChanged = "gvRQLegs_ValueChanged";
+            });
+
+        });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Base Fare"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "BaseFare"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Fuel Surcharge(17%)"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "FuelSurcharge"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Chasis Fee"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "ChasisFees"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Additional Fare"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "AdditionalFare"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Total Amount"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "TotalAmount"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "One-Way Miles"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "OneWayMiles"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Travel Time"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "TravelTime"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "One-Way Base"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "OneWayBase"; settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "TotalAmount").DisplayFormat = "c";
+        settings.Settings.ShowFooter = true;
+
+        settings.ClientSideEvents.EndCallback = "LoadDefaultLeg";
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

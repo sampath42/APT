@@ -1,0 +1,72 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Templates", Action = "TemplateGridViewPartial" };
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Templates", Action = "TemplateGridViewPartialAddNew" };
+        // settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Templates", Action = "TemplateGridViewPartialUpdate" };
+        // settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Templates", Action = "TemplateGridViewPartialDelete" };
+        // settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        // settings.SettingsBehavior.ConfirmDelete = true;
+
+        //settings.CommandColumn.Visible = true;
+        //      settings.CommandColumn.ShowNewButton = true;
+        //      settings.CommandColumn.ShowDeleteButton = true;
+        //      settings.CommandColumn.ShowEditButton = true;
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "#";
+            //column.SetHeaderTemplateContent(c =>
+            //{
+            //    ViewContext.Writer.Write(
+            //    Html.ActionLink("New", "WorkOrderViewPartialAddNew").ToHtmlString()
+            //    );
+            //});
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write(
+                Html.ActionLink("Edit", "TemplateExternalEditForm", new { ID = DataBinder.Eval(c.DataItem, "ID") }).ToHtmlString()
+                );
+            });
+            column.Settings.AllowDragDrop = DefaultBoolean.False;
+            column.Settings.AllowSort = DefaultBoolean.False;
+            column.Width = 70;
+        });
+
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Columns.Add("ID");
+        settings.Columns.Add("TemplateName");
+        settings.Columns.Add("BillTo");
+        settings.Columns.Add("Broker");
+        settings.Columns.Add("TypeOfMove");
+        settings.Columns.Add("EquipmentProvider");
+        settings.Columns.Add("EquipmentSize");
+        settings.Columns.Add("ChassisProvider");
+        settings.Columns.Add("EquipmentPickup");
+        settings.Columns.Add("EquipmentReturn");
+        settings.Columns.Add("LocationHours");
+        settings.Columns.Add("Origin");
+        settings.Columns.Add("Destination");
+        //settings.Columns.Add("DateCreated");
+        //settings.Columns.Add("CreatedBy");
+        //settings.Columns.Add("DateUpdated");
+        //settings.Columns.Add("UpdatedBy");
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

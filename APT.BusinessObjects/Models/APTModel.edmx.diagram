@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0db25e4ff1a34e869a4a0202a5e535ad" Name="Diagram1">
+        <EntityTypeShape EntityType="AllPointsTransportModel.Appointment" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.APTAdditionalItems_Master" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.APTAddress_Master" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.APTUserRole" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.APTUser" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Contact" Width="1.5" PointX="9.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.DriverPay" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Driver" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Employee" Width="1.5" PointX="11.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Legs_RateQuote" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Payroll" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RateQuote" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RateTable" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Resource" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RolePermission" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RowColor" Width="1.5" PointX="13.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RowColorsDriver" Width="1.5" PointX="13.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RQAdditionalItem" Width="1.5" PointX="5" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.RQLeg" Width="1.5" PointX="5" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Schedule" Width="1.5" PointX="13.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.ScreenMaster" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Setting" Width="1.5" PointX="8.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.StopTable" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.TaskManagement" Width="1.5" PointX="15.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.TemplatesDriverPay" Width="1.5" PointX="15.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.TemplatesWO" Width="1.5" PointX="4.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.TemplatesWOLineItem" Width="1.5" PointX="17.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.Truck" Width="1.5" PointX="17.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.WOLineItem" Width="1.5" PointX="6.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.WOLineItems_RateQuote" Width="1.5" PointX="8.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.WorkOrder" Width="1.5" PointX="17.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.WOTemplate" Width="1.5" PointX="19.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.APTRate_Master" Width="1.5" PointX="19.75" PointY="13.75" IsExpanded="true" />
+        <AssociationConnector Association="AllPointsTransportModel.FK_APTUserRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="AllPointsTransportModel.FK__RQLegs__RateQuot__70A8B9AE" ManuallyRouted="false" />
+        <AssociationConnector Association="AllPointsTransportModel.FK_RQAdditionalItems_RateQuotes1" ManuallyRouted="false" />
+        <AssociationConnector Association="AllPointsTransportModel.FK_ScreenMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="AllPointsTransportModel.FK_Contacts_ContactID" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.C__MigrationHistory" Width="1.5" PointX="14.375" PointY="20.75" />
+        <EntityTypeShape EntityType="AllPointsTransportModel.sysdiagram" Width="1.5" PointX="20.375" PointY="18.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

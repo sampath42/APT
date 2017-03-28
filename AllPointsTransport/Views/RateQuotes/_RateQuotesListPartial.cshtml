@@ -1,0 +1,79 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "RateQuotesList";
+        settings.CallbackRouteValues = new { Controller = "RateQuotes", Action = "RateQuotesListPartial" };
+
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RateQuotes", Action = "RateQuotesListPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RateQuotes", Action = "RateQuotesListPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = false;
+        settings.CommandColumn.ShowDeleteButton = false;
+        settings.CommandColumn.ShowEditButton = false;
+
+        settings.KeyFieldName = "RateQuoteId";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "#";
+            //column.SetHeaderTemplateContent(c =>
+            //{
+            //    ViewContext.Writer.Write(
+            //    Html.ActionLink("New", "WorkOrderViewPartialAddNew").ToHtmlString()
+            //    );
+            //});
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write(
+                Html.ActionLink("Edit", "Create", new { RateQuoteId = DataBinder.Eval(c.DataItem, "RateQuoteId") }).ToHtmlString()
+                );
+            });
+            column.Settings.AllowDragDrop = DefaultBoolean.False;
+            column.Settings.AllowSort = DefaultBoolean.False;
+            column.Width = 70;
+        });
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "CreatedDate";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        });
+
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "UppdatedDate";
+        //    column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        //    column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+        //});
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "RateQuoteId";
+            column.ColumnType = MVCxGridViewColumnType.Default;
+            column.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+
+        });
+       // settings.Columns.Add("RateQuoteId");
+        settings.Columns.Add("Contact.Company");
+        settings.Columns.Add("From");
+        settings.Columns.Add("To");
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+    

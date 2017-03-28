@@ -1,0 +1,699 @@
+﻿@model APT.BusinessObjects.Models.Employee
+
+@{
+
+    if (Model != null)
+    {
+        ViewBag.Title = "Employee - ";
+
+    }
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @*<div style="font-size:small;">
+        @Html.ActionLink("BackToList", "Index")
+    </div>*@
+    <div class="container">
+
+
+        <div class="form-horizontal">
+            <div class="col-lg-6" style="float: left;width:28%  ">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.First)
+
+                <fieldset>
+                    <legend>Employee</legend>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "First";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "First";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "First";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.First).GetHtml()
+
+                    </div>
+                    
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Last         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Last";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Last";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Last).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Address1  ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Address1";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Address1";
+    ////settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Address1).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Address2         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Address2";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Address2";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Address2).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "City         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "City";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "City";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.City).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "State         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "State";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "State";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.State).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Zip         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Zip";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Zip";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Zip).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Phone         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Phone";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Phone";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Phone).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Fax         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Fax";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Fax";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Fax).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Email         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Email";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Email";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Email).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "SSN         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "SSN";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "SSN";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.SSNum).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Salary         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Salary";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Salary";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Salary).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Hourly         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Hourly";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Hourly";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Hourly).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Notes         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Notes";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Notes";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Notes).GetHtml()
+
+                    </div>
+                    <br />
+                    <br />
+                    @*<div class="line">
+                    @Html.DevExpress().Label(
+            settings =>
+            {
+                settings.ControlStyle.CssClass = "label";
+            }
+            ).GetHtml()
+
+                    @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnCreate";
+                settings.ControlStyle.CssClass = "button";
+                settings.Text = "Create";
+                settings.UseSubmitBehavior = true;
+            }
+            ).GetHtml()
+                    </div>*@
+                </fieldset>
+                <br />                
+            </div>
+            <div class="col-lg-6" style="float: left; width:28% ">
+                <fieldset>
+                    <legend>Login</legend>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "UserName         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "UserName";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "UserName";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Username).GetHtml()
+
+                    </div>
+                    <div class="control-group">
+
+
+                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "Password         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "Password";
+    }
+).GetHtml()
+
+                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Password";
+    //settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Password).GetHtml()
+
+                    </div>
+                    </fieldset>
+                </div>
+                    <div class="col-lg-6" style="float: left;width:25% ">
+                        <fieldset>
+                            <legend>Security Rights</legend>
+                            @*<div class="form-horizontal">*@
+                            @*<div class="col-lg-6" style="float: left; ">*@
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "supervisor";
+    settings.Checked = true;
+    settings.Text = "Supervisor";
+    //settings.Properties.ClientSideEvents.CheckedChanged = "function (s, e){ myButton.SetVisible(!myButton.GetVisible());}";
+
+}
+).Bind(Model.Supervisor).GetHtml()
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "contacts";
+    settings.Checked = true;
+    settings.Text = "Contacts";
+
+}
+).Bind(Model.scrContacts).GetHtml()
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "drivers";
+    settings.Checked = true;
+    settings.Text = "Drivers";
+
+}
+).Bind(Model.scrDrivers).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "employees";
+    settings.Checked = true;
+    settings.Text = "Employees";
+
+}
+).Bind(Model.scrEmployees).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "trucks";
+    settings.Checked = true;
+    settings.Text = "Trucks";
+
+}
+).Bind(Model.scrTrucks).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "payroll";
+    settings.Checked = true;
+    settings.Text = "Payroll";
+
+}
+).Bind(Model.scrPayroll).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "workorders";
+    settings.Checked = true;
+    settings.Text = "Work Orders";
+}
+).Bind(Model.scrWorkOrders).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "takepayments";
+    settings.Checked = true;
+    settings.Text = "Take Payments";
+}
+).Bind(Model.scrTakePayments).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "paymentsbytypereport";
+    settings.Checked = true;
+    settings.Text = "Payments By Type Report";
+}
+).Bind(Model.scrPaymentTypeReport).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "maintenance";
+    settings.Checked = true;
+    settings.Text = "Maintenance";
+}
+).Bind(Model.scrMaintenance).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "reminders";
+    settings.Checked = true;
+    settings.Text = "Reminders";
+}
+).Bind(Model.scrReminders).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "invoicereport";
+    settings.Checked = true;
+    settings.Text = "Invoice Report";
+}
+).Bind(Model.scrInvoiceReport).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "fuelreport";
+    settings.Checked = true;
+    settings.Text = "Fuel Report";
+}
+).Bind(Model.scrFuelReport).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "profitandlossreport";
+    settings.Checked = true;
+    settings.Text = "Profit and Loss Report";
+}
+).Bind(Model.scrProfitLossReport).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "monthlyprofitandlossreport";
+    settings.Checked = true;
+    settings.Text = "Monthly Profit and Loss Report";
+}
+).Bind(Model.scrMonthlyProfitLossReport).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "profitandlossreportbytruck";
+    settings.Checked = true;
+    settings.Text = "Profit and Loss Report by Truck";
+}
+).Bind(Model.scrProfitLossReportTruck).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "trailers";
+    settings.Checked = true;
+    settings.Text = "Trailers";
+}
+).Bind(Model.scrTrailers).GetHtml()
+                            </div>
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "triplog";
+    settings.Checked = true;
+    settings.Text = "Trip Log";
+}
+).Bind(Model.scrTripLog).GetHtml()
+
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "fuelexpenselog";
+    settings.Checked = true;
+    settings.Text = "Fuel Expense Log";
+}
+).Bind(Model.scrFuelExpenseLog).GetHtml()
+                            </div>
+                        </fieldset>
+                    </div>
+            </div>
+           
+        <fieldset>
+            <div class="col-md-10" style="float:left;width:50%;">
+                @*@Html.DevExpress().Label(
+            settings =>
+            {
+                settings.ControlStyle.CssClass = "label";
+            }
+            ).GetHtml()*@
+
+                @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnCreate";
+                settings.ControlStyle.CssClass = "button";
+                settings.Text = "Create";
+                settings.UseSubmitBehavior = true;
+            }
+            ).GetHtml()
+            </div>
+            <div class="col-md-10" style="float:right;width:50%;">
+                @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnBackToList";
+                settings.ControlStyle.CssClass = "btn btn-primary";
+                settings.Init += (s, e) =>
+                {
+                    ((MVCxButton)s).Native = true;
+                };
+
+                settings.Text = "Back To List";
+                settings.UseSubmitBehavior = true;
+                settings.RouteValues = new { Controller = "Employees", Action = "Index" };
+                settings.ClientSideEvents.Click = "function(s, e) { CallbackPanel.PerformCallback(); }";
+
+                //settings.ClientSideEvents.Click = "OnClick2";
+            }
+            ).GetHtml()
+                </div>
+</fieldset>
+        </div>
+
+    @*</div>*@
+
+
+}
+

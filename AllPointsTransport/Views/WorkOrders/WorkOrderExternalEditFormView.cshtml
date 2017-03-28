@@ -1,0 +1,1391 @@
+﻿
+@model APT.BusinessObjects.Models.WorkOrder
+
+@{
+
+    if (Model != null)
+    {
+        ViewBag.Title = "Work Order - " + Model.WorkOrderNo.ToString();
+
+    }
+
+}
+<script>
+    $(document).ready(function () {
+    
+
+      //  $('#billtodivid').height(33);
+    
+        var s = $('#BillTo_I').val();
+        var nocompany = 0;
+        var start = 0;
+        var end = 0;
+        var company = [];
+
+
+
+        for (var i = 0; i <= s.length; i++) {
+            if (s[i] == ',') {
+                company.push((s.substring(start, i)));
+
+            }
+        }
+        var p = s.lastIndexOf(',') + 1;
+        company.push(s.substring(p, s.length));
+        for (var i = 0; i < company.length; i++)
+        {
+            var s = company[i];
+
+            GridLookup.SetValue(s.toString());
+        }
+       // GridLookup.SetValue(s.toString());
+
+    });
+  
+    function getBillTo(s, e) {
+        
+       // var grid = GridLookup.GetGridView();
+        $('#BillTo_I').val(GridLookup.GetValue());
+        //grid.GetSelectedFieldValues('Company', OnGetSelectedFieldValues);
+      
+    }
+   
+   
+    function ShowContactGrid(s, e) {
+        $('#contactgrid').show();
+        //$('#contactgrid').hide();
+    }
+    var textSeparator = ";";
+    function OnListBoxSelectionChanged(listBox, args) {
+        if (args.index == 0)
+            args.isSelected ? listBox.SelectAll() : listBox.UnselectAll();
+        UpdateSelectAllItemState();
+        UpdateText();
+    }
+    function UpdateSelectAllItemState() {
+        IsAllSelected() ? checkListBox.SelectIndices([0]) : checkListBox.UnselectIndices([0]);
+    }
+    function IsAllSelected() {
+        for (var i = 1; i < checkListBox.GetItemCount() ; i++)
+            if (!checkListBox.GetItem(i).selected)
+                return false;
+        return true;
+    }
+    function UpdateText() {
+        var selectedItems = checkListBox.GetSelectedItems();
+        checkComboBox.SetText(GetSelectedItemsText(selectedItems));
+    }
+    function SynchronizeListBoxValues(dropDown, args) {
+        checkListBox.UnselectAll();
+        var texts = dropDown.GetText().split(textSeparator);
+        var values = GetValuesByTexts(texts);
+        checkListBox.SelectValues(values);
+        UpdateSelectAllItemState();
+        UpdateText(); // for remove non-existing texts
+    }
+    function GetSelectedItemsText(items) {
+        var texts = [];
+        for (var i = 0; i < items.length; i++)
+            if (items[i].index != 0)
+                texts.push(items[i].text);
+        return texts.join(textSeparator);
+    }
+    function GetValuesByTexts(texts) {
+        var actualValues = [];
+        var item;
+        for (var i = 0; i < texts.length; i++) {
+            item = checkListBox.FindItemByText(texts[i]);
+            if (item != null)
+                actualValues.push(item.value);
+        }
+        return actualValues;
+    }
+    function LoadDefaultWorkOrder(s, e) {
+        WOLineItemsGridView.SetEditValue("WorkOrder", $('#WorkOrderNo_I').val());
+        DriverPayGridView.SetEditValue("WorkOrder", $('#WorkOrderNo_I').val());
+    }
+    function OnDropDown(s, e) {
+        var myDate = new Date();
+        s.SetDate(myDate);
+        s.SetText("");
+
+    }
+    function OnClick1(s, e) {
+        //return confirm('Do you really want to save  this WorkOrder Template ?');
+
+        //var form;
+        @*form = $('#Form1');
+        form[0].action = '@Url.Action("SaveAsTemplate", "WorkOrders")';
+        form[0].submit();*@
+    }
+    function OnClick2(s, e) {
+        //return confirm('Do you really want to save WorkOrder ?');
+
+
+    }
+</script>
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "Form1");
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.WorkOrderID)
+    @Html.HiddenFor(model => model.DateCreated)
+    @Html.HiddenFor(model => Model.DateUpdated)
+  
+
+    @*  @Html.HiddenFor(model => model.WorkOrderNo)*@
+    <div class="main">
+
+        <div class="main-inner">
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="span8">
+
+                        <div class="widget ">
+
+                            <div class="widget-header">
+                                <i class="icon-truck"></i>
+                                <h3>Work Order</h3>
+                                
+                                 @*   @Html.ActionLink("Back To List", "Index")*@
+
+                                    @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnBackToList";
+                settings.ControlStyle.CssClass = "btn btn-primary";
+                settings.Init += (s, e) =>
+                {
+                    ((MVCxButton)s).Native = true;
+                };
+
+                settings.Text = "Back To List";
+                settings.UseSubmitBehavior = true;
+                settings.RouteValues = new { Controller = "WorkOrders", Action = "Index" };
+                settings.ClientSideEvents.Click = "function(s, e) { CallbackPanel.PerformCallback(); }";
+
+                //settings.ClientSideEvents.Click = "OnClick2";
+            }
+            ).GetHtml()
+                                    @*  <button type="submit" class="btn btn-primary">Save</button>*@
+                                    @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnUpdate";
+                settings.ControlStyle.CssClass = "btn btn-primary";
+                settings.Init += (s, e) =>
+                {
+                    ((MVCxButton)s).Native = true;
+                };
+
+                settings.Text = "Save WorkOrder";
+                settings.UseSubmitBehavior = true;
+                settings.RouteValues = new { Controller = "WorkOrders", Action = "WorkOrderExternalEditForm" };
+                settings.ClientSideEvents.Click = "function(s, e) { CallbackPanel.PerformCallback(); }";
+
+                //settings.ClientSideEvents.Click = "OnClick2";
+            }
+            ).GetHtml()
+                                    @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnSaveAsTemplate";
+                settings.ControlStyle.CssClass = "btn";
+                settings.Text = "Save As Template";
+                settings.UseSubmitBehavior = true;
+                // settings.ClientSideEvents.Click = "function(s, e) { PopupControlSelectSub.Show(); }";
+                settings.RouteValues = new { Controller = "WorkOrders", Action = "SaveAsTemplate" };
+                settings.ClientSideEvents.Click = "function(s, e) { CallbackPanel.PerformCallback(); }";
+            }
+            ).GetHtml()
+                                    @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnCancel";
+                settings.ControlStyle.CssClass = "btn";
+                settings.Text = "Cancel";
+                settings.ClientSideEvents.Click = "function(s, e){ document.location='" + DevExpressHelper.GetUrl(new { Controller = "WorkOrders", Action = "Index" }) + "'; }";
+            }
+            ).GetHtml()
+
+                                  
+                            </div> <!-- /widget-header -->
+                            <div class="widget-content form-horizontal">
+                                    
+                                        @*@Html.DevExpress().Label(
+            settings =>
+            {
+                settings.ControlStyle.CssClass = "label";
+            }
+            ).GetHtml()*@
+
+                                        @*Create update and cancel buttons*@
+
+
+
+                             
+
+                                    
+
+                                        @Html.DevExpress().CallbackPanel(
+    settings =>
+    {
+        settings.Name = "CallbackPanel";
+        //   settings.CallbackRouteValues = new { Controller = "LoadingPanel", Action = "ExamplePartial" };
+        settings.SettingsLoadingPanel.Enabled = false;
+        settings.ClientSideEvents.BeginCallback = "function(s, e) { LoadingPanel.Show(); }";
+        settings.ClientSideEvents.EndCallback = "function(s, e) { LoadingPanel.Hide(); }";
+    }
+).GetHtml()
+
+
+                                        @Html.DevExpress().LoadingPanel(
+        settings =>
+        {
+            settings.Name = "LoadingPanel";
+            settings.Modal = true;
+            // settings.ContainerElementID = IsDisplayedOverPanel ? "Panel" : "";
+        }
+    ).GetHtml()
+                              
+
+
+
+
+                                    @*@Html.DevExpress().Button(
+                settings =>
+                {
+                    settings.Name = "btnGetBillTo";
+                    settings.ControlStyle.CssClass = "button";
+                    settings.Text = "Get BillTo";
+                    // settings.UseSubmitBehavior = true;
+
+                    //settings.ClientSideEvents.Click = "getBillTo";
+                    // settings.RouteValues = new { Controller = "WorkOrders", Action = "SaveAsTemplate" };
+                    //settings.ClientSideEvents.Click = "ShowContactGrid";
+                }
+                ).GetHtml()*@
+
+
+                                        
+                                            @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "BillTo";
+    settings.ClientVisible = false;
+    settings.ReadOnly = true;
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.BillTo).GetHtml()
+                               
+
+                                    <div class="control-group">
+                                        
+                                                       
+                                                           @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "WO#:         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "WorkOrderNo";
+    }
+).GetHtml()
+                                                      
+                                                                          @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "WorkOrderNo";
+    settings.ReadOnly = true;
+
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.WorkOrderNo).GetHtml()
+                                        
+</div>
+                                       
+
+                                    <div class="control-group" id="billtodivid">
+                                        @Html.DevExpress().Label(
+    settings =>
+    {
+        settings.ControlStyle.CssClass = "control-label";
+        settings.Text = "BillTo:         ";
+        settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+        settings.AssociatedControlName = "BillTo";
+    }
+).GetHtml()
+                                        @Html.Action("GridLookupPartial")
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Status: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Status";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Status";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Status).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "DatePaid:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "DatePaid";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "DatePaid";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.DatePaid).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.Text = "Pro #: ";
+    settings.AssociatedControlName = "Pro";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Pro";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Pro).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "LocationHours: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "LocationHours";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "LocationHours";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.LocationHours).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Invoiced Date:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "InvoicedDate";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "InvoicedDate";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.InvoicedDate).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "ETA:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "ETA";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "ETA";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.ETA).GetHtml()
+                                    </div>
+
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Storage LFD: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "StorageLFD";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "StorageLFD";
+    settings.ControlStyle.CssClass = "editor";
+    // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+}
+).Bind(Model.StorageLFD).GetHtml()
+                                    </div>
+
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Per Diem LFD:*";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "PerDiemLFD";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "PerDiemLFD";
+    settings.ControlStyle.CssClass = "editor";
+    // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+}
+).Bind(Model.PerDiemLFD).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Cust Ref #: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Reference";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Reference";
+    settings.ControlStyle.CssClass = "editor";
+    // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+}
+).Bind(Model.Reference).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Cutoff:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Cutoff";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "Cutoff";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Cutoff).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "P.O. #:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "PO";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "PO";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.PO).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Outgate Receipt:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "OutgateReceipt";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "OutgateReceipt";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.OutgateReceipt).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Appt #: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "ApptNumber";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "ApptNumber";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.ApptNumber).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Release #: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Release";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Release";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Release).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Ingate Receipt:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "IngateReceipt";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "Ingate Receipt";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.IngateReceipt).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Container 1: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Container1";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Container1";
+    settings.ControlStyle.CssClass = "editor";
+    // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+}
+).Bind(Model.Container1).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Booking #: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Booking";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Booking";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Booking).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Ready Notification: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "ReadyNotification";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "ReadyNotification";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.ReadyNotification).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Chassis: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Chassis";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Chassis";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Chassis).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Notes Private: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "NotesPrivate";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "NotesPrivate";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.NotesPrivate).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Seal #: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Seal";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Seal";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Seal).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Notes Invoice: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "NotesInvoice";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "NotesInvoice";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.NotesInvoice).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Linked Pro #: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "LinkedProNum";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "LinkedProNum";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.LinkedProNum).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Weight: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Weight";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Weight";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Weight).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Duration: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Duration";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Duration";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Duration).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Container 2: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Container2";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Container2";
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.Container2).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Piece Count: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "PieceCount";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "PieceCount";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.PieceCount).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Commodity: ";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Commodity";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Commodity";
+    settings.ControlStyle.CssClass = "editor";
+
+}
+).Bind(Model.Commodity).GetHtml()
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Appt Time:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "ApptTime";
+}
+).GetHtml()
+                                        @Html.DevExpress().DateEdit(
+settings =>
+{
+    settings.Name = "ApptTime";
+    settings.ControlStyle.CssClass = "editor";
+    // settings.Properties.e;
+    // settings.DropDownButton.ClientVisible = false;
+}
+).Bind(Model.ApptTime).GetHtml()
+
+
+                                    </div>
+
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Origin:*";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Origin";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.Origin,
+    settings =>
+    {
+        settings.Name = "Origin";
+        settings.Properties.ValueType = typeof(string);
+        //settings.Properties.DataSource = ViewBag.Origin;
+        // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+
+    }
+    ).BindList(ViewBag.Origin).GetHtml()
+
+
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Destination:*";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Destination";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.Destination,
+    settings =>
+    {
+        settings.Name = "Destination";
+        settings.Properties.ValueType = typeof(string);
+
+        // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+
+    }
+    ).BindList(ViewBag.Destination).GetHtml()
+
+
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Type Of Move:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "TypeOfMove";
+}
+).GetHtml()
+                                        @Html.DevExpress().ComboBoxFor(model => model.TypeOfMove,
+    settings =>
+    {
+        settings.Name = "TypeOfMove";
+        settings.Properties.ValueType = typeof(string);
+
+
+    }
+    ).BindList(ViewBag.TypeOfMove).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Equipment Provider: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "EquipmentProvider";
+}
+).GetHtml()
+                                        @Html.DevExpress().ComboBoxFor(model => model.EquipmentProvider,
+    settings =>
+    {
+        settings.Name = "EquipmentProvider";
+        settings.Properties.ValueType = typeof(string);
+
+        // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+
+    }
+    ).BindList(ViewBag.EquipmentProvider).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Equipment Size:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "EquipmentSize";
+
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.EquipmentSize,
+    settings =>
+    {
+        settings.Name = "EquipmentSize";
+        settings.Properties.ValueType = typeof(string);
+
+
+    }
+    ).BindList(ViewBag.EquipmentSize).GetHtml()
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Broker:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "Broker";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.Broker,
+    settings =>
+    {
+        settings.Name = "Broker";
+        settings.Properties.ValueType = typeof(string);
+
+
+    }
+    ).BindList(ViewBag.Broker).GetHtml()
+
+
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Chassis Provider:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "ChassisProvider";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.ChassisProvider,
+    settings =>
+    {
+        settings.Name = "ChassisProvider";
+        settings.Properties.ValueType = typeof(string);
+        settings.Properties.DataSource = ViewBag.ChassisProvider;
+
+    }
+    ).BindList(ViewBag.ChassisProvider).GetHtml()
+
+
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Equipment Pickup: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "EquipmentPickup";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.EquipmentPickup,
+    settings =>
+    {
+        settings.Name = "EquipmentPickup";
+        settings.Properties.ValueType = typeof(string);
+        // settings.Properties.DataSource = ViewBag.EquipmentPickup;
+        // settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+
+    }
+    ).BindList(ViewBag.EquipmentPickup).GetHtml()
+
+
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Equipment Return:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "EquipmentReturn";
+}
+).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.EquipmentReturn,
+    settings =>
+    {
+        settings.Name = "EquipmentReturn";
+        settings.Properties.ValueType = typeof(string);
+        //  settings.Properties.TextField = "EquipmentReturn";
+        // settings.Properties.ValueField = "WorkOrderID";
+
+        //settings.Properties.DataSource = ViewBag.EquipmentReturn;
+
+    }
+    ).BindList(ViewBag.EquipmentReturn).GetHtml()
+
+
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "BOL: *";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "BOL";
+}
+).GetHtml()
+                                        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "BOL";
+    //settings.Properties.ValidationSettings.RequiredField.IsRequired = true;
+
+}
+).Bind(Model.BOL).GetHtml()
+                                    </div>
+
+                                    <div class="control-group">
+                                        @Html.DevExpress().Label(
+settings =>
+{
+    settings.ControlStyle.CssClass = "control-label";
+    settings.Text = "Street Turn:";
+    settings.Style.Add(HtmlTextWriterStyle.TextAlign, "Left");
+    settings.AssociatedControlName = "StreetTurn";
+}
+).GetHtml()
+                                        @Html.DevExpress().CheckBox(
+settings =>
+{
+    settings.Name = "StreetTurn";
+    // settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.StreetTurn).GetHtml()
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        @*@Html.DevExpress().Label(
+                settings =>
+                {
+                    settings.ControlStyle.CssClass = "label";
+                    settings.Text = "Bill To:";
+                    settings.AssociatedControlName = "BillTo";
+                }
+                ).GetHtml()
+
+                                        @Html.DevExpress().ComboBoxFor(model => model.BillTo,
+                settings =>
+                {
+                    settings.Name = "BillTo";
+                    settings.Properties.ValueType = typeof(string);
+                }
+                ).BindList(ViewBag.BillTo).GetHtml()*@
+                                        @*     @Html.Action("GridLookupPartial")*@
+
+                                        @*@Html.DevExpress().ComboBox(
+                settings =>
+                {
+                    settings.Name = "BillTo";
+                    settings.Properties.ValueType = typeof(string);
+                    settings.Properties.DataSource = ViewBag.BillTo;
+
+
+                }
+                ).BindList(ViewBag.BillTo).GetHtml()*@
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        @*@Html.DevExpress().DropDownEdit(
+                    settings =>
+                    {
+                        settings.Name = "checkComboBox";
+                        settings.Text = "Name   Contact No  Email ID";
+                        // settings.Width = 240;
+                        //   settings.Properties.DropDownWindowStyle.BackColor = Color.FromArgb(0xEDEDED);
+
+                        settings.SetDropDownWindowTemplateContent(c =>
+                        {
+
+
+
+                        //    @Html.DevExpress().ListBox(
+                        //        listBoxSettings =>
+                        //        {
+                        //            listBoxSettings.Name = "checkListBox";
+                        //            listBoxSettings.ControlStyle.Border.BorderWidth = 0;
+                        //            listBoxSettings.ControlStyle.BorderBottom.BorderWidth = 1;
+                        //            //  listBoxSettings.ControlStyle.BorderBottom.BorderColor = Color.FromArgb(0xDCDCDC);
+                        //            listBoxSettings.Height = 170;
+                        //            listBoxSettings.Width = 300;
+
+
+                            //            listBoxSettings.Properties.SelectionMode = ListEditSelectionMode.CheckColumn;
+                            //            listBoxSettings.Properties.Items.Add("(Select all)");
+                            //            listBoxSettings.Properties.Items.Add("Sampath Bingi 727-675-3456 abc@gmail.com", "1");
+                            //            listBoxSettings.Properties.Items.Add("Jayshri Dalvi 919-234-4567 shri@gmail.com", "2");
+                            //            listBoxSettings.Properties.Items.Add("Venkat 919-345-8796 venkat@yahoo.com", "3");
+                            //            listBoxSettings.Properties.Items.Add("Manideep  723-234-4567  manideep@hotmail.com", "4");
+                            //            listBoxSettings.Properties.Items.Add("Anusha Ganta 919-635-2345  anusha@outlook.com", "5");
+                            //            listBoxSettings.Properties.Items.Add("Nagarjun  919-635-2345  arjun@outlook.com", "5");
+                            //            // settings.Properties.ValueType = typeof(string);
+                            //            // settings.Properties.DataSource = ViewBag.BillTo;
+
+                            //            listBoxSettings.Properties.ClientSideEvents.SelectedIndexChanged = "OnListBoxSelectionChanged";
+                            //        }
+                            //    )
+                            //    .Render();
+                            //    ViewContext.Writer.Write("<div style=\"margin: 6px; overflow: hidden;\">");
+                            //    @Html.DevExpress().Button(
+                            //        buttonSettings =>
+                            //        {
+                            //            buttonSettings.Name = "buttonClose";
+                            //            buttonSettings.Text = "Close";
+                            //            buttonSettings.Style.Add("float", "right");
+                            //            buttonSettings.ClientSideEvents.Click = "function(s, e){ checkComboBox.HideDropDown(); }";
+                            //            buttonSettings.Height = 26;
+                            //        }
+                            //    )
+                            //    .Render();
+                            //    ViewContext.Writer.Write("</div>");
+                        });
+                        settings.Properties.AnimationType = AnimationType.None;
+                        settings.Properties.ClientSideEvents.TextChanged = "SynchronizeListBoxValues";
+                        settings.Properties.ClientSideEvents.DropDown = "SynchronizeListBoxValues";
+                    }
+                ).GetHtml()*@
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        @*@Html.DevExpress().Button(
+                settings =>
+                {
+                    settings.Name = "btnGetBillTo";
+                    settings.ControlStyle.CssClass = "button";
+                    settings.Text = "Get BillTo";
+                   // settings.UseSubmitBehavior = true;
+
+                    settings.ClientSideEvents.Click = "getBillTo";
+                    // settings.RouteValues = new { Controller = "WorkOrders", Action = "SaveAsTemplate" };
+                    //settings.ClientSideEvents.Click = "ShowContactGrid";
+                }
+                ).GetHtml()*@
+
+
+                                    </div>
+
+
+
+
+                                    @*@Html.DevExpress().ListBox(set =>
+            {
+                set.Name = "BillTo";
+                set.Properties.TextField = "Description";
+                set.Properties.ValueField = "Id";
+                set.Properties.ValueType = typeof(int);
+                set.Properties.SelectionMode = ListEditSelectionMode.CheckColumn;
+
+                //set.PreRender = (sender, e) =>
+                //{
+                //    MVCxListBox listBox = (MVCxListBox)sender;
+                //    foreach (ListEditItem item in listBox.Properties.Items)
+                //    {
+                //        item.Selected = IsSelectValue((int)item.Value);
+                //    }
+                //};
+            }).BindList(ViewBag.BillTo).GetHtml()*@
+
+
+
+
+
+
+
+</div>
+
+
+
+                                @* <div class="row">&nbsp;</div>*@
+
+
+                                
+
+                                  
+                                      
+                               
+                                    @*<div class="form-group col-sm-4">
+                    @Html.DevExpress().Label(
+                        settings =>
+                        {
+                            settings.ControlStyle.CssClass = "label";
+                            settings.Text = "Appt Time:";
+                            settings.AssociatedControlName = "ApptTime";
+                        }
+                        ).GetHtml()
+                </div>*@
+
+
+
+
+                                
+
+
+                            </div>
+                </div>
+                    <div class="span4">
+
+                        <div class="widget">
+
+                            <div class="widget-header">
+                                <i class="icon-money"></i>
+                                <h3>Work Order Line Items</h3>
+                            </div> <!-- /widget-header -->
+
+                            <div class="widget-content">
+                                @Html.Action("WOLineItemsPartial", new { WorkOrderNo = String.IsNullOrWhiteSpace(Convert.ToString(Model.WorkOrderNo)) ? "0" : Convert.ToString(Model.WorkOrderNo) })
+                                @* <canvas id="pie-chart" class="chart-holder" height="250" width="538"></canvas>*@
+                            </div> <!-- /widget-content -->
+
+                        </div> <!-- /widget -->
+
+
+
+
+                    </div> <!-- /span4 -->
+
+
+            </div>
+                <div class="row">
+
+                    <div class="span12">
+
+                        <div class="widget">
+
+                            <div class="widget-header">
+                                <i class="icon-star"></i>
+                                <h3>Driver Pays</h3>
+                            </div> <!-- /widget-header -->
+
+                            <div class="widget-content">
+                               
+
+
+                                @Html.Action("DriverPayGridViewPartial", new { WorkOrderNo = String.IsNullOrWhiteSpace(Convert.ToString(Model.WorkOrderNo)) ? "0" : Convert.ToString(Model.WorkOrderNo) })
+                               @* <canvas id="pie-chart" class="chart-holder" height="250" width="538"></canvas>*@
+                            </div> <!-- /widget-content -->
+
+                        </div> <!-- /widget -->
+
+
+
+
+                    </div> <!-- /span6 -->
+
+    </div>
+
+                </div>
+
+                </div>
+            </div>
+       
+        }
+

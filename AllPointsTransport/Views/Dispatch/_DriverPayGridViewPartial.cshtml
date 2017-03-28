@@ -1,0 +1,78 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "DriverPayGridView";
+        settings.CallbackRouteValues = new { Controller = "Dispatch", Action = "DriverPayGridViewPartial" };
+
+				settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Dispatch", Action = "DriverPayGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Dispatch", Action = "DriverPayGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Dispatch", Action = "DriverPayGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+		settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+		settings.KeyFieldName = "ID";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+		settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+		settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+		settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+		settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+		settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+				settings.Columns.Add("ID");
+				settings.Columns.Add("WorkOrder");
+				settings.Columns.Add("RowOrder");
+				settings.Columns.Add("Status");
+				settings.Columns.Add("ToDispatch");
+				settings.Columns.Add("ActiveLeg");
+				settings.Columns.Add("TypeOfLoad");
+				settings.Columns.Add("PayType");
+				settings.Columns.Add("DispatchNotes");
+				settings.Columns.Add("ApptTime");
+				settings.Columns.Add("DetentionStarts");
+				settings.Columns.Add("DepartTime");
+				settings.Columns.Add("ArrivalTime");
+				settings.Columns.Add("LineHaulAmountTruck");
+				settings.Columns.Add("FSAmountTruck");
+				settings.Columns.Add("TotalAmountTruck");
+				settings.Columns.Add("TotalAmountEmployee");
+				settings.Columns.Add("Driver");
+				settings.Columns.Add("DriverRowID");
+				settings.Columns.Add("DriverType");
+				settings.Columns.Add("TruckNum");
+				settings.Columns.Add("TruckPayPct");
+				settings.Columns.Add("FSDeductionPct");
+				settings.Columns.Add("EmployeePayPct");
+				settings.Columns.Add("Origin");
+				settings.Columns.Add("Destination");
+				settings.Columns.Add("Duration");
+				settings.Columns.Add("PrePlanSent");
+				settings.Columns.Add("CancelSent");
+				settings.Columns.Add("DispatchAcceptedStatus");
+				settings.Columns.Add("WayBilled");
+				settings.Columns.Add("PayDriver");
+				settings.Columns.Add("Outgate");
+				settings.Columns.Add("Ingate");
+				settings.Columns.Add("POD");
+				settings.Columns.Add("BOL");
+				settings.Columns.Add("ReceivedDate");
+				settings.Columns.Add("DriverPaid");
+				settings.Columns.Add("CommissionPaid");
+				settings.Columns.Add("DateCreated");
+				settings.Columns.Add("CreatedBy");
+				settings.Columns.Add("DateUpdated");
+				settings.Columns.Add("UpdatedBy");
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

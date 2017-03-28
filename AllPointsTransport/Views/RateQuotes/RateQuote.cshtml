@@ -1,0 +1,160 @@
+﻿@model List<APT.BusinessObjects.Models.RQLeg>
+
+<style>
+    .rqDefaultsDiv table, .rqDefaultsDiv td {
+        word-break: break-word;
+        min-height: 20px;
+        height: 40px;
+    }
+</style>
+
+@*<div class="row">
+    <div class="form-group col-sm-3">
+        @Html.DevExpress().Label(
+    settings =>
+{
+    settings.ControlStyle.CssClass = "label";
+    settings.Text = "Rate Quote #:";
+    settings.AssociatedControlName = "RateQuoteId";
+}
+).GetHtml()
+        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "RateQuoteId";
+    settings.ReadOnly = true;
+    settings.ControlStyle.CssClass = "editor";
+}
+).Bind(Model.RateQuoteId).GetHtml()
+    </div>
+
+    <div class="form-group col-sm-3">
+        @Html.DevExpress().Label(
+    settings =>
+{
+    settings.ControlStyle.CssClass = "label";
+    settings.Text = "Bill To:";
+    settings.AssociatedControlName = "BillTo";
+}
+).GetHtml()
+
+        @Html.DevExpress().ComboBoxFor(model => model.BillTo,
+settings =>
+{
+    settings.Name = "BillTo";
+    settings.Properties.ValueType = typeof(string);
+}
+).BindList(ViewBag.BillTo).GetHtml()
+    </div>
+
+    <div class="form-group col-sm-3">
+        @Html.DevExpress().Label(
+    settings =>
+{
+    settings.ControlStyle.CssClass = "label";
+    settings.Text = "TO:";
+    settings.AssociatedControlName = "Destination";
+}
+).GetHtml()
+        @Html.DevExpress().TextBox(
+settings =>
+{
+    settings.Name = "Destination";
+    settings.ControlStyle.CssClass = "editor";
+}
+).GetHtml()
+    </div>
+    <div class="form-group col-sm-3">
+        @Html.DevExpress().Button(
+             settings =>
+             {
+                 settings.Name = "btnCatculateRQ";
+                 settings.ControlStyle.CssClass = "button";
+                 settings.Text = "Calculate";
+                 settings.UseSubmitBehavior = false;
+                 settings.ClientSideEvents.Click = "CalculateRate";
+             }
+             ).GetHtml()
+    </div>
+</div>*@
+
+
+@Html.DevExpress().Label(settings =>
+{
+    settings.Name = "lblFrom";
+    settings.Text = "From : ";
+}).GetHtml()
+
+
+@Html.DevExpress().CheckBoxList(settings =>
+{
+    settings.Name = "FromChkList";
+    settings.Properties.Items.Add("Item 0");
+    settings.Properties.Items.Add("Item 1");
+    settings.Properties.Items.Add("Item 2");
+    settings.Properties.Items.Add("Item 3");
+    settings.Properties.Items.Add("Item 4");
+    settings.Properties.Items.Add("Item 5");
+    settings.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+}).GetHtml()
+
+
+@Html.DevExpress().Label(settings =>
+{
+    settings.Name = "lblTo";
+    settings.Text = "To : ";
+}).GetHtml()
+
+
+
+@Html.DevExpress().CheckBoxList(settings =>
+{
+    settings.Name = "ToChkList";
+    settings.Properties.Items.Add("Item 0");
+    settings.Properties.Items.Add("Item 1");
+    settings.Properties.Items.Add("Item 2");
+    settings.Properties.Items.Add("Item 3");
+    settings.Properties.Items.Add("Item 4");
+    settings.Properties.Items.Add("Item 5");
+    settings.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+    settings.Properties.RepeatColumns = 2;
+}).GetHtml()
+
+
+
+
+
+
+<script>
+
+    var from = [];
+    var to;
+    $('.chkFrom').on('click', function () {
+        var name = $(this).attr('index');
+        if (this.checked) {
+            from.push(name);
+        }
+        else {
+            var i = from.indexOf(name);
+            if (i != -1) {
+                from.splice(i, 1);
+            }
+        };
+    });
+
+    $('.chkTo').on('click', function () {
+        var name = $(this).attr('name');
+        if (this.checked) {
+            to = name;
+            $('.chkTo').prop('disabled', true);
+            $(this).removeAttr('disabled');
+        }
+        else {
+            to = '';
+        };
+    });
+
+    function RenderDetailRoute(e) {
+
+    };
+</script>

@@ -1,0 +1,750 @@
+﻿@model AllPointsTransport.Models.RateQuoteViewModel
+@{
+    ViewBag.Title = "Create RQ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    span[id^="GridLookupRQ_DDD_gv_DXSelBtn"] {
+        display: none !important;
+    }
+</style>
+<script type="text/javascript">
+
+    var isToSelected = false;
+    var isFromSelected = false;
+    var errorText = '';
+    var proceedToSave = 0;   //Indicator to check if we have any error before proceeding to invoke save operation
+
+    $(document).ready(function () {
+        GridLookupRQ.SetValue($('#RateQuote_BillTo').val());
+    });
+
+    function getBillToRQ(s, e) {
+        setTimeout(function () {
+            $('#RateQuote_BillTo').val(GridLookupRQ.GetValue());
+        }, 1000);
+    }
+
+    var rateQuoteId = '@Model.RateQuote.RateQuoteId';
+        var defaultLegValues = null;
+        var isRQCalculated = 0;  // Variable to see if ratequote has been calculated before save
+
+        function ConverToWO(s, a) {
+            var selectedFromVal = forPreview.replace('tbl', '');
+
+            if (isConvertRDBSelected) {
+                SetWindowErrorVisible(false);
+                $.ajax({
+                    url: "@Url.Action("ConvertToWO")",
+                    data: { rateQuoteId: rateQuoteId, selectedFrom: selectedFromVal },
+                    success: function (data) {
+
+                        var url = "@Url.Action("WorkOrderExternalEditForm", "WorkOrders", new { ID = "workorderid" })".replace("workorderid", data.WorkOrderID);
+                        document.location.href = url;
+                    },
+                    failure: function (a, b, c, d, e) {
+
+                    },
+                    error: function (a, b, c, d, e) {
+
+                    }
+                });
+            }
+            else {
+                SetWindowErrorString('Please select any one of the below RateQuote\'s to proceed.');
+                SetWindowErrorVisible(true);
+            }
+        };
+
+    function OnAddClick(s, e) {
+        debugger;
+            LoadingPanel.Show();
+            isRQCalculated = 1;     //Indicator for RQ Calculated
+            if (txtOthersFrom.GetText() != '') {
+                FromChkList.GetSelectedValues().push(txtOthersFrom.GetText());
+            }
+            var index = FromChkList.GetSelectedValues().indexOf('Others');
+            if (index > -1)
+                FromChkList.GetSelectedValues().splice(index, 1);
+            $('#RateQuote_From').val(FromChkList.GetSelectedValues().join(';'));
+            //            $('#RateQuote_To').val(ToChkList.GetSelectedValues().join(';'));
+            $('#RateQuote_To').val(ToChkList.GetSelectedItem().text == 'Others' ? txtOthersTo.GetText() : ToChkList.GetSelectedItem().text);
+            var form = $('#rqCreateForm').serialize();
+            var url = "@Url.Action("RQLegs")";
+
+            Common.AjaxCallAsync(url, form, function (data) {
+
+                $('#divRQLegs').html(data);
+                LoadingPanel.Hide();
+            });
+        };
+
+        var AdditionalItemsJson = {};
+        function AddAdditionalItemsClick(s, e) {
+            debugger;
+            var index = 0;
+            $.each(AdditionalItemsJson, function (i, v) {
+                var additionalItemHTML = '<input id="RqAdditionalItems_' + index + '__Id" name="RqAdditionalItems[' + index + '].Id" type="hidden" value="' + i + '">';
+                var additionalItemQtyHTML = '<input id="RqAdditionalItems_' + index + '__Quantity" name="RqAdditionalItems[' + index + '].Quantity" type="hidden" value="' + v + '">';
+                $(additionalItemHTML).appendTo('#additionalItemsDiv');
+                $(additionalItemQtyHTML).appendTo('#additionalItemsDiv');
+                index++;
+            });
+
+            var form = $('#rqLegsForm').serialize();
+            var url = "@Url.Action("NewRQAdditionalItems")";
+            Common.AjaxCallAsync(url, form, function (data) {
+
+                $('#divRQLegs').html(data);
+                AdditionalItemsPopupControl.Hide();
+            });
+        };
+
+        function AdditionalItemSelected(s, e) {
+
+            if (s.GetText() == "Others") {
+
+
+                // to do show textbox;
+                additionaltextbox.SetVisible(true);
+            }
+            if (s.GetCheckState() == "Checked") {
+                AdditionalItemsJson[s.name] = 0;
+            }
+            else {
+                delete AdditionalItemsJson[s.name];
+            }
+        };
+
+        function QuantityChanged(s, e) {
+
+            var key = s.name.replace('txt', '');
+            if (AdditionalItemsJson.hasOwnProperty(key)) {
+                AdditionalItemsJson[key] = s.GetText();
+            }
+        };
+
+        function OnSaveRateQuote(s, e) {
+
+
+
+            if (isRQCalculated == 0) {
+                errorText += 'RateQuote needs to be calculated before saving.';
+                errorText += '<br /><br />';
+            }
+            if (FromChkList.GetSelectedValues().length == 0)
+                errorText += 'Invalid From Address.';
+
+            if (ToChkList.GetSelectedItem() == null) {
+                if (errorText != '')
+                    errorText += '<br /><br />';
+                errorText += 'Invalid To Address.';
+            }
+
+            if ((FromChkList.GetSelectedValues().length == 0) || (ToChkList.GetSelectedItem() == null) || (isRQCalculated == 0)) {
+
+                SetWindowErrorString(errorText);
+                SetWindowErrorVisible(true);
+            } else {
+                proceedToSave = 1;
+                SetWindowErrorVisible(false);
+                LoadingPanel.Show();
+            }
+
+            if (proceedToSave) {
+                
+                var fromList = FromChkList.GetSelectedValues();
+                var index = fromList.indexOf('Others');
+
+                if (index > -1)
+                    fromList.splice(index, 1);
+                if (txtOthersFrom.GetText() != '') {
+                    fromList.push(txtOthersFrom.GetText());
+                }
+
+                $('#RateQuote_From').val(fromList.join(';'));
+
+                if (txtOthersFrom.GetText() != '') {
+                    $('#RateQuote_To').val(txtOthersTo.GetText());
+                }
+                else {
+                    $('#RateQuote_To').val(ToChkList.GetSelectedItem().text);
+                }
+                
+                var form = $('#rqCreateForm').serialize();
+                var url = "@Url.Action("SaveRateQuote")";
+                Common.AjaxCallAsync(url, form, function (data) {
+
+
+                    rateQuoteId = data.RateQuoteIds;
+                    RateQuoteIdLabel.SetText("Rate Quote ID : " + rateQuoteId);
+                    RateQuoteIdLabel.SetVisible(true);
+
+
+                    SaveLegsAndAdditionalItems(data.RateQuoteIds);
+                    if (data.RateQuoteIds > 0) {
+                        btnConvertToWorkOrder.SetEnabled(true);
+                        HintLabel.SetVisible(false);
+                    }
+                    LoadingPanel.Hide();
+                });
+
+            }
+        };
+
+        function SaveLegsAndAdditionalItems(rateQuoteIds) {
+            $('#rqLegsForm #RQStatus').val(rateQuoteIds);
+            var form = $('#rqLegsForm').serialize();
+            var url = "@Url.Action("SaveLegsAndAddItem")";
+            Common.AjaxCallAsync(url, form, function (data) {
+
+            });
+        };
+
+        function OpenPreview(s, e) {
+            $('#divRQPreview').empty();
+            //$('#' + forPreview).clone().appendTo('#divRQPreview');
+            $('#divLegs').clone().appendTo('#divRQPreview');
+            $('#divRQPreview .convertToDivOnPreview').replaceWith(function () {
+                return $('<div>' + $(this).val() + '</div>');
+            });
+            $('#divRQPreview table').css('width', '100%');
+            $('#divRQPreview table th').css('width', '120px');
+            $('#divRQPreview .removeOnPreview').remove();
+            PreviewPopupControl.Show();
+        };
+
+        function selectElementContents(s, e) {
+
+            var el = document.getElementById('divRQPreview');
+            var body = $('#divRQPreview'), range, sel;
+            if (document.createRange && window.getSelection) {
+                range = document.createRange();
+                sel = window.getSelection();
+                sel.removeAllRanges();
+                try {
+                    range.selectNodeContents(el);
+                    sel.addRange(range);
+                } catch (e) {
+                    range.selectNode(el);
+                    sel.addRange(range);
+                }
+            } else if (body.createTextRange) {
+                range = body.createTextRange();
+                range.moveToElementText(el);
+                range.select();
+            }
+            document.execCommand("Copy");
+            PreviewPopupControl.Hide();
+        };
+
+        function OnFromAddChange(s, e) {
+            isFromSelected = !Common.IsNullOrWhiteSpace(s.GetSelectedIndices());
+            EnableCalculate();
+            if ($.inArray(5, s.GetSelectedIndices()) != "-1") {
+                txtOthersFrom.SetVisible(true);
+                var index = FromChkList.GetSelectedValues().indexOf('Others')
+                if (index > -1) FromChkList.GetSelectedValues().splice(index, 1);
+            }
+            else {
+                txtOthersFrom.Clear();
+                txtOthersFrom.SetVisible(false);
+                var index = FromChkList.GetSelectedValues().indexOf(txtOthersTo.GetText())
+                if (index > -1) FromChkList.GetSelectedValues().splice(index, 1);
+            };
+        };
+
+        function OnToAddChange(s, e) {
+            isToSelected = !Common.IsNullOrWhiteSpace(s.GetSelectedIndex());
+            EnableCalculate();
+            //if ($.inArray(5, s.GetSelectedIndices()) != "-1") {
+            if (s.GetSelectedItem().text == 'Others') {
+
+
+                // to do show textbox;
+                txtOthersTo.SetVisible(true);
+                $('#RateQuote_To').val(txtOthersTo.GetText());
+
+            }
+            else {
+                // to do hide textbox;
+                //txtOthersTo.Clear();
+                //txtOthersTo.SetVisible(false);
+                //var index = ToChkList.GetSelectedValues().indexOf(txtOthersTo.GetText())
+                //if (index > -1) ToChkList.GetSelectedValues().splice(index, 1);
+                //$('#RateQuote_To').val(txtOthersTo.GetText());
+            };
+        };
+
+        function EnableCalculate() {
+            if (isFromSelected && isToSelected) {
+                Calculate.SetEnabled(true);
+                AdditionalItems.SetEnabled(true);
+            }
+            else {
+                Calculate.SetEnabled(false);
+                AdditionalItems.SetEnabled(false);
+            };
+        };
+
+        function UpdateErrorWindow() {
+
+            // if (checkVisible && !IsErrorWindowVisible()) return;
+
+            var errorText = '';
+            if (FromChkList.GetSelectedValues().length == 0)
+                errorText += 'Invalid From Selection.';
+
+            if (ToChkList.GetItemCount.length == 0) {
+                if (errorText != '')
+                    errorText += '<br /><br />';
+                errorText += 'Invalid To Selection.';
+            }
+
+            if (FromChkList.GetSelectedValues().empty && ToChkList.GetSelectedValues().empty) {
+                SetWindowErrorVisible(false);
+            } else {
+                SetWindowErrorString(errorText);
+                SetWindowErrorVisible(true);
+            }
+
+        }
+
+        function SetWindowErrorVisible(value) {
+            if (value)
+                pcError.Show();
+            else
+                pcError.Hide();
+        }
+        function SetWindowErrorString(text) {
+            pcError.SetContentHTML(text);
+        }
+
+        $(document).ready(function () {
+
+            if ('@Model.RateQuote.RateQuoteId' != '0') {
+                debugger;
+                var fromItems = '@Model.RateQuote.From'.split(';');
+                var toItems = '@Model.RateQuote.To'.split(';');
+                if ($.inArray('Others', fromItems) != "-1") {
+                    txtOthersFrom.SetText(fromItems[fromItems.length - 2]);
+                    txtOthersFrom.SetVisible(true);
+                }
+                if (toItems.length > 1) {
+                    txtOthersTo.SetText(toItems[1]);
+                    txtOthersTo.SetVisible(true);
+                    toItems = toItems[0];
+                }
+                FromChkList.SelectValues(fromItems);
+                ToChkList.SetValue(toItems);
+
+
+                proceedToSave = 1;
+                isFromSelected = true;
+                isToSelected = true;
+                var url = "@Url.Action("EditRQLegs")";
+                var data = { rateQuoteId: '@Model.RateQuote.RateQuoteId' };
+                Common.AjaxCallAsync(url, data, function (data) {
+
+                    $('#divRQLegs').html(data);
+                });
+            };
+        });
+</script>
+<div class="main">
+    <div class="main-inner">
+        <div class="container">
+            <div class="row">
+                <div class="widget-header">
+                    <h3>Create Rate Quote</h3>
+                </div> <!-- /widget-header -->
+                <div class="widget-content">
+                    <div class="form-actions">
+                        <div class="control-group">
+                           
+                                @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btnBackToList";
+                settings.ControlStyle.CssClass = "btn btn-primary";
+                settings.Init += (s, e) =>
+                {
+                    ((MVCxButton)s).Native = true;
+                };
+
+                settings.Text = "Back To List";
+                settings.UseSubmitBehavior = true;
+                settings.RouteValues = new { Controller = "RateQuotes", Action = "Index" };
+                settings.ClientSideEvents.Click = "function(s, e) { CallbackPanel.PerformCallback(); }";
+
+                //settings.ClientSideEvents.Click = "OnClick2";
+            }
+
+            ).GetHtml()
+                                                     
+                            
+                            
+                            @Html.DevExpress().PopupControl(
+                    settingsE =>
+                    {
+                        settingsE.Name = "pcError";
+                        settingsE.SkinID = "none";
+                        settingsE.Width = 200;
+                        settingsE.EnableClientSideAPI = true;
+                        settingsE.EnableHotTrack = false;
+                        settingsE.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                        settingsE.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+                        settingsE.PopupElementID = "popupControlForm";
+                        settingsE.ShowHeader = true;
+                        settingsE.HeaderText = "ErrorMessage:";
+                        settingsE.ShowCloseButton = true;
+                        settingsE.ShowShadow = true;
+                        // settingsE.PopupHorizontalOffset = 70;
+                        //settingsE.PopupVerticalOffset = 114;
+                        settingsE.PopupAction = PopupAction.None;
+                        settingsE.CloseAction = CloseAction.CloseButton;
+                        //settingsE.Styles.Content.BackColor = Color.FromArgb(0xFFFBBA);
+                        // settingsE.Styles.Content.ForeColor = Color.FromArgb(0xFF3333);
+                        settingsE.Styles.Content.Paddings.Padding = 12;
+                        settingsE.Styles.Content.Paddings.PaddingLeft = 14;
+                        settingsE.Styles.Content.Paddings.PaddingRight = 14;
+                        // settingsE.ControlStyle.Border.BorderColor = Color.FromArgb(0xFFC800);
+                        // settingsE.ControlStyle.Border.BorderStyle =Solid;
+                        settingsE.ControlStyle.Border.BorderWidth = 1;
+                    }).GetHtml()
+
+                            @Html.DevExpress().LoadingPanel(
+                        settings =>
+                        {
+                            settings.Name = "LoadingPanel";
+                            settings.Modal = true;
+                            //settings.ContainerElementID = IsDisplayedOverPanel ? "Panel" : "";
+                        }).GetHtml()
+
+                            
+
+                                @Html.DevExpress().Button(
+                            settings =>
+                            {
+                                settings.Name = "btnSaveRQ";
+                                settings.ControlStyle.CssClass = "button";
+                                settings.Text = "Save";
+                                settings.UseSubmitBehavior = false;
+                                settings.ClientSideEvents.Click = "OnSaveRateQuote";
+                            }).GetHtml()
+
+                                @Html.DevExpress().Button(
+                       settings =>
+                       {
+                           settings.Name = "btnCancelRQ";
+                           settings.ControlStyle.CssClass = "button";
+                           settings.Text = "Cancel";
+                           settings.UseSubmitBehavior = false;
+                           settings.RouteValues = new { Controller = "RateQuotes", Action = "Index" };
+                       }).GetHtml()
+
+                                @Html.DevExpress().Button(
+                       settings =>
+                       {
+                           settings.Name = "PreviewRQ";
+                           settings.ControlStyle.CssClass = "button";
+                           settings.Text = "Preview";
+                           settings.RenderMode = ButtonRenderMode.Button;
+                           settings.ClientSideEvents.Click = "OpenPreview";
+                           settings.UseSubmitBehavior = false;
+                       }).GetHtml()
+
+                                @Html.DevExpress().Button(
+                    settings =>
+                    {
+                        settings.Name = "btnConvertToWorkOrder";
+                        settings.ControlStyle.CssClass = "button";
+                        settings.Text = "ConvertToWorkOrder";
+                        settings.ClientEnabled = Model.RateQuote.RateQuoteId > 0;
+                        settings.ClientSideEvents.Click = "ConverToWO";
+                    }).GetHtml()
+
+                                @Html.DevExpress().Label(
+                   Labelhint =>
+                   {
+                       Labelhint.Name = "HintLabel";
+                       Labelhint.Text = "* Save RateQuote before Converting to Workorder";
+                       Labelhint.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                       Labelhint.Width = 400;
+                       Labelhint.Properties.EnableClientSideAPI = true;
+                   }).GetHtml()
+
+                            
+                            @Html.DevExpress().CallbackPanel(
+                 settings =>
+                 {
+                     settings.Name = "CallbackPanel";
+                     settings.SettingsLoadingPanel.Enabled = false;
+                     settings.ClientSideEvents.BeginCallback = "function(s, e) { LoadingPanel.Show(); }";
+                     settings.ClientSideEvents.EndCallback = "function(s, e) { LoadingPanel.Hide(); }";
+                 }).GetHtml()
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm("Create", "RateQuotes", FormMethod.Post, new { @id = "rqCreateForm" }))
+            {
+                                    @Html.HiddenFor(model => model.RateQuote.RateQuoteId)
+                                    @Html.HiddenFor(model => model.RateQuote.From)
+                                    @Html.HiddenFor(model => model.RateQuote.To)
+                                    @Html.HiddenFor(model => model.RateQuote.BillTo)
+                                    @Html.DevExpress().Label(Settings =>
+               {
+                   Settings.Name = "RateQuoteIdLabel";
+                   Settings.ControlStyle.Font.Size = 12;
+                   Settings.Properties.EnableClientSideAPI = true;
+                   Settings.Text = "Rate Quote ID : " + Model.RateQuote.RateQuoteId.ToString();
+                   Settings.ClientVisible = (Model.RateQuote.RateQuoteId.ToString() != "0") ? true : false;
+
+               }).GetHtml()
+                                    <div class="form-horizontal">
+                                        <div class="control-group">
+                                            <div class="control-label">
+                                                @Html.DevExpress().Label(
+                           settings =>
+                           {
+                               settings.Text = "BillTo:";
+                               settings.AssociatedControlName = "BillTo";
+                               settings.Width = 50;
+                           }).GetHtml()
+                                            </div>
+                                            <div class="controls">
+
+                                                @Html.Action("GridLookupPartial")
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <div class="control-label">
+                                                @Html.DevExpress().Label(settings =>
+                       {
+                           settings.Name = "lblFrom";
+                           settings.Text = "From : ";
+                       }).GetHtml()
+                                            </div>
+                                            <div class="controls">
+                                                @Html.DevExpress().CheckBoxList(settings =>
+                       {
+                           settings.Name = "FromChkList";
+                           settings.Properties.TextField = "Accronym";
+                           settings.Properties.ValueField = "Accronym";
+                           settings.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+                           settings.Properties.ClientSideEvents.SelectedIndexChanged = "OnFromAddChange";
+                       }).BindList(Model.DefaultAddresses).GetHtml()
+
+                                                @Html.DevExpress().TextBox(settings =>
+                       {
+                           settings.Name = "txtOthersFrom";
+                           settings.ClientVisible = false;
+                           settings.Width = 150;
+                       }).GetHtml()
+                                            </div>
+
+                                        </div>
+
+                                        <div class="control-group">
+                                            <div class="control-label">
+                                                @Html.DevExpress().Label(settings =>
+                       {
+                           settings.Name = "lblTo";
+                           settings.Text = "To : ";
+                       }).GetHtml()
+                                            </div>
+                                            <div class="controls">
+                                                @Html.DevExpress().RadioButtonList(settings =>
+                        {
+                            settings.Name = "ToChkList";
+                            settings.Properties.TextField = "Accronym";
+                            settings.Properties.ValueField = "Accronym";
+                            settings.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+                            settings.Properties.ClientSideEvents.SelectedIndexChanged = "OnToAddChange";
+                        }).BindList(Model.DefaultAddresses).GetHtml()
+
+                                                @Html.DevExpress().TextBox(settings =>
+                        {
+                            settings.Name = "txtOthersTo";
+                            settings.ClientVisible = false;
+                            settings.Width = 150;
+                        }).GetHtml()
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="control-group">
+
+                                            <div class="controls">
+                                                @Html.CheckBoxFor(m => m.RoundTrip) Round Trip
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="control-group">
+
+                                            <div class="controls">
+                                                @Html.DevExpress().Button(settings =>
+                                           {
+                                               settings.Name = "Calculate";
+                                               settings.Text = "Calculate";
+                                               settings.UseSubmitBehavior = false;
+                                               settings.ClientSideEvents.Click = "OnAddClick";
+                                               settings.ClientEnabled = Model.RateQuote.RateQuoteId > 0; 
+                                           }).GetHtml()
+                                                @Html.DevExpress().Button(settings =>
+                                           {
+                                               settings.Name = "AdditionalItems";
+                                               settings.Text = "Additional Items";
+                                               settings.UseSubmitBehavior = false;
+                                               settings.ClientSideEvents.Click = "function(s,e){debugger;AdditionalItemsPopupControl.Show();}";
+                                               settings.ClientEnabled = Model.RateQuote.RateQuoteId > 0; 
+                                           }).GetHtml()
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">&nbsp;</div>
+                                    <div class="container-fluid">
+                                        <div class="row" id="divRQLegs">
+                                            @*@if (Model.RateQuote.RateQuoteId > 0)
+                                                {
+                                                    @Html.Action("EditRQLegs", new { rateQuoteId = Model.RateQuote.RateQuoteId })
+                                                }
+                                                else
+                                                {
+                                                    @Html.Action("RQLegs", new { rateQuote = Model })
+                                                }*@
+                                        </div>
+                                    </div>
+                                    <br />
+
+                                    }
+
+                    @Html.DevExpress().PopupControl(settings =>
+               {
+                   settings.Name = "AdditionalItemsPopupControl";
+                   settings.AllowResize = true;
+                   settings.ShowHeader = true;
+                   settings.ShowOnPageLoad = false;
+                   settings.AllowDragging = true;
+                   settings.CloseAction = CloseAction.CloseButton;
+                   settings.CloseOnEscape = true;
+                   settings.Modal = true;
+                   settings.Width = 300;
+                   settings.HeaderText = "Additional Items";
+                   //settings.PopupElementID = "AdditionalItems";
+                   settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                   settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+                   settings.SetContent(() =>
+                   {
+                       ViewContext.Writer.Write("<table align=\"center\"<tbody>");
+                       ViewContext.Writer.Write("<tr>");
+                       ViewContext.Writer.Write("<td/>");
+                       ViewContext.Writer.Write("<td>");
+                       Html.DevExpress().Label(la =>
+                       {
+                           la.Text = "Quantity";
+                       }).Render();
+                       ViewContext.Writer.Write("<td/>");
+                       ViewContext.Writer.Write("<tr/>");
+                       foreach (var item in (new APT.BusinessObjects.Models.AllPointsTransportEntities()).APTAdditionalItems_Master)
+                       {
+
+                           ViewContext.Writer.Write("<tr>");
+                           ViewContext.Writer.Write("<td>");
+                           Html.DevExpress().CheckBox(s =>
+                           {
+                               s.Name = item.Id.ToString();
+                               s.Text = item.Item;
+                               s.Width = 120;
+                               s.Properties.ClientSideEvents.CheckedChanged = "AdditionalItemSelected";
+                           }).Render();
+                           ViewContext.Writer.Write("</td>");
+                           ViewContext.Writer.Write("<td>");
+                           Html.DevExpress().TextBox(s =>
+                           {
+                               s.Name = "txt" + item.Id.ToString();
+                               s.Width = 50;
+                               s.Properties.ClientSideEvents.TextChanged = "QuantityChanged";
+                           }).Render();
+                           ViewContext.Writer.Write("</td>");
+                           ViewContext.Writer.Write("</tr>");
+                       }
+                       ViewContext.Writer.Write("<tr>");
+                       ViewContext.Writer.Write("<td>");
+                       Html.DevExpress().TextBox(atext =>
+                       {
+                           atext.Name = "additionaltextbox";
+                           atext.ClientVisible = false;
+                       }
+               ).Render();
+                       ViewContext.Writer.Write("</td>");
+                       ViewContext.Writer.Write("</tr>");
+                       ViewContext.Writer.Write("<tr>");
+
+                       ViewContext.Writer.Write("<td align=\"right\">");
+                       ViewContext.Writer.Write("<br/>");
+                       Html.DevExpress().Button(s =>
+                       {
+                           s.Name = "AddNewAdditionalItems";
+                           s.Text = "Add";
+                           s.UseSubmitBehavior = false;
+                           s.ClientSideEvents.Click = "AddAdditionalItemsClick";
+                       }).Render();
+                       ViewContext.Writer.Write("&nbsp;&nbsp;");
+                       ViewContext.Writer.Write("</td>");
+                       ViewContext.Writer.Write("<td>");
+                       ViewContext.Writer.Write("<br/>");
+                       Html.DevExpress().Button(s =>
+                       {
+                           s.Name = "CancelAdditionalItems";
+                           s.Text = "Cancel";
+                           s.UseSubmitBehavior = false;
+                           s.ClientSideEvents.Click = "function(s,e){AdditionalItemsPopupControl.Hide();}";
+                       }).Render();
+                       ViewContext.Writer.Write("</td>");
+                       ViewContext.Writer.Write("</tr>");
+                       ViewContext.Writer.Write("</tbody></table>");
+
+                   });
+
+               }).GetHtml()
+                </div>                
+
+                @Html.DevExpress().PopupControl(settings =>
+               {
+                   settings.Name = "PreviewPopupControl";
+                   settings.AllowResize = true;
+                   settings.ShowHeader = true;
+                   settings.ShowOnPageLoad = false;
+                   settings.AllowDragging = true;
+                   settings.CloseAction = CloseAction.CloseButton;
+                   settings.CloseOnEscape = true;
+                   settings.Modal = true;
+                   settings.Width = 300;
+                   settings.PopupElementID = "PreviewPopupControl";
+                   settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                   settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+                   settings.HeaderText = "Rate Quote Preview";
+                   settings.SetContent(() =>
+                   {
+
+                       ViewContext.Writer.Write("<div id='divRQPreview'></div>");
+                       ViewContext.Writer.Write("<div class='row'>&nbsp;</div>");
+                       Html.DevExpress().Button(s =>
+                       {
+                           s.Name = "CopyToClipBoard";
+                           s.Text = "Copy To Clipboard";
+                           s.UseSubmitBehavior = false;
+                           s.ClientSideEvents.Click = "selectElementContents";
+                       }).Render();
+
+                   });
+
+               }).GetHtml()
+
+            </div>
+        </div>
+    </div>
+</div>

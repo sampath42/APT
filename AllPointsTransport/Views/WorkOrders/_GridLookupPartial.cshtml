@@ -1,0 +1,83 @@
+@{
+    var gridLookup = Html.DevExpress().GridLookup(settings => {
+        settings.Name = "GridLookup";
+
+        settings.KeyFieldName = "Company";
+
+        settings.GridViewProperties.CallbackRouteValues = new { Controller = "WorkOrders", Action = "GridLookupPartial" };
+        settings.Properties.SelectionMode = GridLookupSelectionMode.Multiple;
+
+        settings.Properties.TextFormatString = "{0}";
+
+        //settings.GridViewProperties.SettingsEditing.AddNewRowRouteValues = new { Controller = "WorkOrders", Action = "GridLookupPartialAddNew" };
+        //settings.GridViewProperties.SettingsEditing.UpdateRowRouteValues = new { Controller = "WorkOrders", Action = "GridLookupPartialUpdate" };
+        //settings.GridViewProperties.SettingsEditing.DeleteRowRouteValues = new { Controller = "WorkOrders", Action = "GridLookupPartialDelete" };
+        settings.GridViewProperties.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.GridViewProperties.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.SetHeaderTemplateContent(c =>
+        {
+            ViewContext.Writer.Write(
+                //Html.ActionLink("New", "GridLookupPartialAddNew", new { ContactID = -1 }).ToHtmlString()
+                "<a href='#'>New</a>"
+            );
+        });
+        //settings.CommandColumn.ShowNewButton = true;
+        //settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.GridViewProperties.SettingsPager.Visible = true;
+        settings.GridViewProperties.Settings.ShowGroupPanel = true;
+        settings.GridViewProperties.Settings.ShowFilterRow = true;
+
+        settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+        //settings.Columns.Add(column =>
+        //{
+        //    column.Caption = "#";
+        //    column.SetDataItemTemplateContent(c =>
+        //    {
+        //        ViewContext.Writer.Write(
+        //            Html.ActionLink("Edit", "GridLookupPartialUpdate", new { ContactID = DataBinder.Eval(c.DataItem, "ContactID") }) + "&nbsp;" +
+        //            Html.ActionLink("Delete", "GridLookupPartialDelete", new { ContactID = DataBinder.Eval(c.DataItem, "ContactID") },
+        //                new { onclick = "return confirm('Do you really want to delete this record?')" })
+        //        );
+        //    });
+        //    column.SetHeaderTemplateContent(c =>
+        //    {
+        //        ViewContext.Writer.Write(
+        //            Html.ActionLink("New", "GridLookupPartialAddNew", new { ContactID = -1 }).ToHtmlString()
+        //        );
+        //    });
+        //    column.Settings.AllowDragDrop = DefaultBoolean.False;
+        //    column.Settings.AllowSort = DefaultBoolean.False;
+        //    column.Width = 70;
+        //});
+
+        //  settings.Columns.Add("ContactID");
+        settings.Columns.Add("Company");
+        settings.Columns.Add("Phone1");
+        settings.Columns.Add("Phone2");
+        settings.Columns.Add("Email1");
+        settings.Columns.Add("Email2");
+        settings.Columns.Add("Contact1");
+        settings.Columns.Add("Contact2");
+        settings.CommandColumn.ShowSelectCheckbox = true;
+       settings.GridViewClientSideEvents.SelectionChanged = "getBillTo";
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "BillTo";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+    });
+    if (ViewData["EditError"] != null){
+        gridLookup.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@gridLookup.BindList(Model).GetHtml()

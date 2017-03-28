@@ -1,0 +1,100 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "DriversGridView";
+        settings.CallbackRouteValues = new { Controller = "Drivers", Action = "DriversGridViewPartial" };
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Drivers", Action = "DriversGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Drivers", Action = "DriversGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Drivers", Action = "DriversGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.Inline;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.SettingsContextMenu.Enabled = true;
+
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "10", "20", "50" };
+
+        settings.KeyFieldName = "DriverID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.AlternatingRow.BackColor = System.Drawing.ColorTranslator.FromHtml("#ccc");
+
+        settings.Columns.Add("DriverNo");
+        //settings.Columns.Add("Active");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Active";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        settings.Columns.Add("DriverType");
+        settings.Columns.Add("EmployeePayPct");
+        settings.Columns.Add("First");
+        settings.Columns.Add("Last");
+        settings.Columns.Add("FullName");
+        settings.Columns.Add("NickName");
+        settings.Columns.Add("Address1");
+        settings.Columns.Add("Address2");
+        settings.Columns.Add("City");
+        settings.Columns.Add("State");
+        settings.Columns.Add("Zip");
+        settings.Columns.Add("HomePhone");
+        settings.Columns.Add("MobilePhone");
+        settings.Columns.Add("Email");
+        settings.Columns.Add("TextMessage");
+        settings.Columns.Add("EmergencyContact");
+        settings.Columns.Add("EmergencyPhone");
+        settings.Columns.Add("SSNum");
+        settings.Columns.Add("DOB");
+        settings.Columns.Add("CDLNum");
+        settings.Columns.Add("CDLExpiration");
+        settings.Columns.Add("MedicalExpiration");
+        settings.Columns.Add("TWICExpiration");
+        settings.Columns.Add("AnnualReview");
+        settings.Columns.Add("HireDate");
+        settings.Columns.Add("ResignDate");
+        settings.Columns.Add("ResignReason");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Rehire";
+            column.ColumnType = MVCxGridViewColumnType.CheckBox;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            column.HeaderStyle.Wrap = DefaultBoolean.True;
+            column.HeaderStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+        });
+
+        //settings.Columns.Add("Rehire");
+        settings.Columns.Add("FuelCardNum");
+        settings.Columns.Add("Notes");
+        settings.Columns.Add("TruckNum");
+        settings.Columns.Add("Color");
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

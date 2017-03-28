@@ -1,0 +1,765 @@
+﻿@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<AllPointsTransport.Models.LocationPoints>
+    <script>
+        $(document).ready(function showhide(s, e) {
+            $('#BNSF').change(function () {
+                if (this.checked)
+                    $('#divtobehidden').show();
+                else
+                    $('#divtobehidden').hide();
+
+            });
+        });
+        $document.ready(function savedata(u, e) {
+            $('#btnUpdate').click(function () {
+                var from = $(this).data('#dropDownEdit1');
+                var to = $(this).data('#dropDownEdit2');
+            }
+            );
+
+        });
+        $(document).ready(function() {
+            $('#dropDownEdit1').change(function () {
+                if (this.checked) {
+                    //show the hidden div
+                    $('#From_textBox_popup').show("fast");
+                } else {
+                    //otherwise, hide it and reset value
+                    $('#From_textBox_popup').hide("fast");
+                    $('#From_textBox_popup').val('');
+                }
+            });
+        });
+    </script>
+
+    <div style="border:solid">
+        <div>
+            <h4>Create Rate Quote</h4>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "label1";
+                settings.Text = "From:";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-6">
+                @Html.DevExpress().CheckBoxList(
+                settings1 =>
+                {
+                settings1.Name = "checkBoxList1";
+                settings1.Properties.Items.Add("item 0");
+                settings1.Properties.Items.Add("item 1");
+                //settings1.Properties.RepeatLayout = System.Web.UI.WebControls.RepeatLayout;
+                settings1.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+                settings1.Properties.RepeatColumns = 6;
+                }).BindList(Model).GetHtml()
+            </div>
+                <div class="form-group col-md-1 text-left">
+                    @Html.DevExpress().TextBox(
+                    settingsT =>
+                    {
+                    settingsT.Name = "From_textBox";
+                    settingsT.Width = 50;
+                    }
+                    ).GetHtml()
+               
+                </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "label2";
+                settings.Text = "To:";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-6">
+                @Html.DevExpress().CheckBoxList(
+                settings1 =>
+                {
+                settings1.Name = "checkBoxList2";
+                settings1.Properties.Items.Add("item 0");
+                settings1.Properties.Items.Add("item 1");
+                //settings1.Properties.RepeatLayout = System.Web.UI.WebControls.RepeatLayout;
+                settings1.Properties.RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
+                settings1.Properties.RepeatColumns = 6;
+                }).BindList(Model).GetHtml()
+                </div>
+                <div class="form-group col-md-1 text-left">
+                    @Html.DevExpress().TextBox(
+                    settingsT =>
+                    {
+                    settingsT.Name = "To_textBox";
+                    settingsT.Width = 50;
+
+                    }
+                    ).GetHtml()
+                </div>
+           
+        </div>
+        <div class="row">
+            <div class="form-group col-md-2 text-right">
+                @Html.DevExpress().Button(settingsBtn =>
+                {
+                settingsBtn.Name = "btnSub";
+                settingsBtn.Width = 50;
+                settingsBtn.Height = 20;
+                settingsBtn.Text = "ADD";
+                settingsBtn.ControlStyle.CssClass = "button";
+                settingsBtn.UseSubmitBehavior = true;
+                settingsBtn.RenderMode = ButtonRenderMode.Button;
+                settingsBtn.ClientSideEvents.Click = "function(s, e) { pcModalMode.Show(); }";
+                }).GetHtml()
+                @Html.DevExpress().PopupControl(
+                settings =>
+                {
+                settings.Name = "pcModalMode";
+                settings.Width = 300;
+                settings.AllowDragging = true;
+                settings.CloseAction = CloseAction.CloseButton;
+                settings.CloseOnEscape = true;
+                settings.PopupAnimationType = AnimationType.None;
+                settings.HeaderText = "ADD LEG";
+                settings.Modal = true;
+                settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+                settings.SetContent(() =>
+                {
+                using (Html.BeginForm("ModalMode", "PopupControl", FormMethod.Post, new { id = "popupForm", @class = "edit_form", @style = "width: 300px" }))
+                {
+                //Html.Hidden("ProductID");
+                ViewContext.Writer.Write("<div class=\"row\"> ");
+
+                    Html.DevExpress().Label(
+                    lblsettings =>
+                    {
+                    lblsettings.ControlStyle.CssClass = "label";
+                    lblsettings.Text = "From";
+                    //lblsettings.AssociatedControlName = "Last";
+                    }).Render();
+
+                    Html.DevExpress().ComboBox(combosettings =>
+                    {
+                    combosettings.Name = "dropDownEdit1";
+                    combosettings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                    combosettings.Properties.ValueType = typeof(string);
+                    combosettings.Properties.Items.Add("BNSF");
+                    combosettings.Properties.Items.Add("UP_DIT");
+                    combosettings.Properties.Items.Add("UP_Mesquite");
+                    combosettings.Properties.Items.Add("KC");
+                    combosettings.Properties.Items.Add("La-Porte");
+                    combosettings.Properties.Items.Add("Other");
+                    
+                    combosettings.Width = 100;
+
+                    }).Render();
+                                              
+                                                  Html.DevExpress().TextBox(
+                                                  settingsText =>
+                                                  {
+                                                  settingsText.Name = "From_textBox_popup";
+                                                  settingsText.Width = 80;
+                                                  }
+                                                  ).Render();
+                    ViewContext.Writer.Write("<br />");
+                    Html.DevExpress().Label(
+                    labelsettings =>
+                    {
+                    labelsettings.ControlStyle.CssClass = "label";
+                    labelsettings.Text = "To";
+
+                    }).Render();
+
+                    Html.DevExpress().ComboBox(drpsettings =>
+                    {
+                    drpsettings.Name = "dropDownEdit2";
+                    drpsettings.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                    drpsettings.Properties.ValueType = typeof(string);
+                    drpsettings.Properties.Items.Add("BNSF");
+                    drpsettings.Properties.Items.Add("UP_DIT");
+                    drpsettings.Properties.Items.Add("UP_Mesquite");
+                    drpsettings.Properties.Items.Add("KC");
+                    drpsettings.Properties.Items.Add("La-Porte");
+                    drpsettings.Properties.Items.Add("Other");
+                    drpsettings.Width = 100;
+
+                    }).Render();
+                    ViewContext.Writer.Write("<br />");
+                    ViewContext.Writer.Write(" </>");
+                ViewContext.Writer.Write("<div class=\"line\">");
+                    Html.DevExpress().Label(
+                    labelSettings =>
+                    {
+                    labelSettings.ControlStyle.CssClass = "label";
+                    }
+                    )
+                    .Render();
+                    Html.DevExpress().Button(
+                    buttonSettings =>
+                    {
+                    buttonSettings.Name = "btnUpdate";
+                    buttonSettings.ControlStyle.CssClass = "button";
+                    buttonSettings.UseSubmitBehavior = true;
+                    buttonSettings.Width = 50;
+                    buttonSettings.Text = "SAVE";
+
+                    }
+                    )
+                    .Render();
+
+                    Html.DevExpress().Button(
+                    buttonSettings =>
+                    {
+                    buttonSettings.Name = "btnCancel";
+                    buttonSettings.ControlStyle.CssClass = "button";
+                    buttonSettings.Width = 50;
+                    buttonSettings.Text = "CANCEL";
+                    buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode.Hide(); }";
+                    }
+                    )
+                    .Render();
+                    ViewContext.Writer.Write(" </div><b class=\"Clear\"></b>");
+                }
+                });
+
+                settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-2">
+                @Html.DevExpress().Button(settings =>
+                {
+                settings.Name = "addbutton2";
+                settings.Width = 50;
+                settings.Height = 20;
+                settings.Text = "ADDITIONAL ITEMS";
+                settings.UseSubmitBehavior = true;
+                settings.RenderMode = ButtonRenderMode.Button;
+                settings.ClientSideEvents.Click = "function(a, b) { pcModalMode1.Show(); }";
+                }).GetHtml()
+                @Html.DevExpress().PopupControl(
+                settings =>
+                {
+                settings.Name = "pcModalMode1";
+                settings.Width = 400;
+                settings.AllowDragging = true;
+                settings.CloseAction = CloseAction.CloseButton;
+                settings.CloseOnEscape = true;
+                settings.PopupAnimationType = AnimationType.None;
+                settings.HeaderText = "ADDITIONAL ITEMS";
+                settings.Modal = true;
+                settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+                settings.ClientSideEvents.CloseUp = "function(a, b){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+                settings.SetContent(() =>
+                {
+                using (Html.BeginForm("ModalMode", "PopupControl", FormMethod.Post, new { id = "popupForm", @class = "edit_form", @style = "width: 300px" })){
+
+                ViewContext.Writer.Write("<div class=\"row\">");
+                    ViewContext.Writer.Write("<div class=\"col-md-3 \"> ");
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox";
+                        s.Text = "Chassis Fee";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox1";
+                        s.Text = "Tri-Axile";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox2";
+                        s.Text = "Hazmat";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox3";
+                        s.Text = "Tri-Axile";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox4";
+                        s.Text = "Residential";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox5";
+                        s.Text = "Re-position";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBox6";
+                        s.Text = "Others";
+                        })
+                        .Render();
+                        ViewContext.Writer.Write("</div>");
+                    ViewContext.Writer.Write("<div class=\"col-md-3 \">");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l1";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT1 =>
+                        {
+                        settingsT1.Name = "Additem_textBox_l2";
+                        settingsT1.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l3";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l4";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l5";
+                        settingsT.Width = 30;
+
+                        }).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l6";
+                        settingsT.Width = 30;
+
+                        }).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_l7";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+
+                        ViewContext.Writer.Write("</div>");
+                    ViewContext.Writer.Write("<div class=\"col-md-3 \">");
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc1";
+                        s.Text = "Over-weight";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc2";
+                        s.Text = "Yard-Storage";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc3";
+                        s.Text = "BobTail";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc4";
+                        s.Text = "Scale";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc5";
+                        s.Text = "Yard-Pull";
+                        })
+                        .Render();
+                        Html.DevExpress().CheckBox(s =>
+                        {
+                        s.Name = "ActiveCheckBoxc6";
+                        s.Text = "Re-position";
+                        })
+                        .Render();
+                        ViewContext.Writer.Write(" </div>");
+                    ViewContext.Writer.Write("<div class=\"col-md-3 \"> ");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_r1";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT1 =>
+                        {
+                        settingsT1.Name = "Additem_textBox_r2";
+                        settingsT1.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_r3";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_r4";
+                        settingsT.Width = 30;
+
+                        }
+                        ).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_r5";
+                        settingsT.Width = 30;
+
+                        }).Render();
+                        ViewContext.Writer.Write("<br />");
+                        Html.DevExpress().TextBox(
+                        settingsT =>
+                        {
+                        settingsT.Name = "Additem_textBox_r6";
+                        settingsT.Width = 30;
+
+                        }).Render();
+                        ViewContext.Writer.Write("<br />");
+                        ViewContext.Writer.Write("</div>");
+                    ViewContext.Writer.Write("</div>");
+
+
+                ViewContext.Writer.Write("<div class=\"line\">");
+
+                    Html.DevExpress().Button(
+                    buttonSettings =>
+                    {
+                    buttonSettings.Name = "btnUpdate123";
+                    buttonSettings.ControlStyle.CssClass = "button";
+                    buttonSettings.UseSubmitBehavior = true;
+                    buttonSettings.Width = 50;
+                    buttonSettings.Text = "SAVE";
+
+                    }
+                    )
+                    .Render();
+
+                    Html.DevExpress().Button(
+                    buttonSettings =>
+                    {
+                    buttonSettings.Name = "btnCancel123";
+                    buttonSettings.ControlStyle.CssClass = "button";
+                    buttonSettings.Width = 50;
+                    buttonSettings.Text = "CANCEL";
+                    buttonSettings.ClientSideEvents.Click = "function(s, e){ pcModalMode1.Hide(); }";
+                    }
+                    )
+                    .Render();
+                    ViewContext.Writer.Write("</div><b class=\"Clear\"></b>");
+                }
+                });
+
+                settings.ClientSideEvents.CloseUp = "function(s, e){ ASPxClientEdit.ClearEditorsInContainer(null, '', true); }";
+                }).GetHtml()
+
+            </div>
+        </div>
+
+    
+
+
+
+    <h6>----------------------------------------------------------------------------------------------------------------------------------------------</h6>
+    <div id="divtobehidden" class="divtobehidden">
+        <div class="row">
+            <div class="form-group col-sm-1 ">
+
+                @Html.DevExpress().CheckBox(
+                settings =>
+                {
+                settings.Name = "check";
+                settings.Checked = false;
+                }
+                ).GetHtml()
+            </div>
+            <div class="form-group col-sm-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote";
+                settings.Text = "Quote 1:";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-sm-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote1";
+                settings.Text = "BNSF to ABC";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote2";
+                settings.Text = "Line Haul($)";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote3";
+                settings.Text = "Fuel Charge($)";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote4";
+                settings.Text = "Total($)";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "labelquote5";
+                settings.Text = "To Dispatch";
+                //settings.Properties.EnableClientSideAPI = true;
+                }).GetHtml()
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-2 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "leg1";
+                settings.Text = "Leg 1:";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "BNSF";
+                settings.Text = "BNSF to ABC";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollar";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollaramt";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollaramts";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1 ">
+
+                @Html.DevExpress().CheckBox(
+                settings =>
+                {
+                settings.Name = "checkamt";
+                settings.Checked = false;
+                }
+                ).GetHtml()
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-2 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "leg2";
+                settings.Text = "Leg 2:";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "ABC";
+                settings.Text = "ABC to BNSF";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollaram";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "amount";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "amts";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1 ">
+
+                @Html.DevExpress().CheckBox(
+                settings =>
+                {
+                settings.Name = "checkamts";
+                settings.Checked = false;
+                }
+                ).GetHtml()
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1 text-right">
+                @Html.DevExpress().Button(
+                settings =>
+                {
+                settings.Name = "btnaddleg";
+                settings.ControlStyle.CssClass = "button";
+                settings.Text = "ADD LEG";
+                settings.UseSubmitBehavior = true;
+                }
+                ).GetHtml()
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "chasisfee";
+                settings.Text = "CHASSIS FEE (Qty: 1)";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "na";
+                settings.Text = "N/A";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "na1";
+                settings.Text = "N/A";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollaramount";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3 text-right">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "triaxlefee";
+                settings.Text = "TRI-AXLE FEE (Qty: 2)";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "na2";
+                settings.Text = "N/A";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "na12";
+                settings.Text = "N/A";
+                }).GetHtml()
+            </div>
+            <div class="form-group col-md-1">
+                @Html.DevExpress().Label(
+                settings =>
+                {
+                settings.Name = "dollaramount1";
+                settings.Text = "$$";
+                }).GetHtml()
+            </div>
+        </div>
+    </div>
+
+
+        </div>

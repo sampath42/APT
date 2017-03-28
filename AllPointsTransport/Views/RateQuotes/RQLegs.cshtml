@@ -1,0 +1,324 @@
+@*@model APT.BusinessObjects.Models.RateQuote*@
+@model AllPointsTransport.Models.RateQuoteViewModel
+<div class="container-fluid" style="border:2px solid #cecece;overflow-y:scroll">
+    <br />
+    <script>
+
+    var triggerFrom = '';
+    var forPreview = '';
+        var isConvertRDBSelected = 0;
+
+        function OnFromAddChange(s, e) {
+            
+            if (NewFromAddrComboBox.GetSelectedItem().text == 'Others') {
+                legtxtOthersFrom.Clear();
+                legtxtOthersFrom.SetVisible(true);                
+            }
+            else {
+                legtxtOthersFrom.Clear();
+                legtxtOthersFrom.SetVisible(false);
+            };
+        };
+
+        function OnToAddChange(s, e) {
+            
+            if (NewToAddrComboBox.GetSelectedItem().text == 'Others') {
+                legtxtOthersTo.Clear();
+                legtxtOthersTo.SetVisible(true);                
+            }
+            else {
+                legtxtOthersTo.Clear();
+                legtxtOthersTo.SetVisible(false);
+            };
+        };
+
+        function AddNewLegClick(s, e) {
+
+            $('#RQTriggerLegFrom').val(triggerFrom);
+            if (legtxtOthersFrom.GetText() != '') {
+                $('#RQNewFrom').val(legtxtOthersFrom.GetText());
+            }
+            else {
+                $('#RQNewFrom').val(NewFromAddrComboBox.GetSelectedItem().text);
+            }
+            if (legtxtOthersTo.GetText() != '') {
+                $('#RQNewTo').val(legtxtOthersTo.GetText());
+            }
+            else {
+                $('#RQNewTo').val(NewToAddrComboBox.GetSelectedItem().text);
+            }
+
+
+            var form = $('#rqLegsForm').serialize();
+            var url = "@Url.Action("NewRQLegs")";
+            Common.AjaxCallAsync(url, form, function (data) {
+
+                $('#divRQLegs').html(data);
+            });
+        };
+
+
+    function OnConvertCheckChanged(s) {
+        
+        isConvertRDBSelected = 1;
+        forPreview = s.name.replace("rdb-", 'tbl');
+    };
+
+    </script>
+    @using (Ajax.BeginForm("RQLegs", "RateQuotes",
+                                                                                                                    new AjaxOptions
+                                                                                                                    {
+                                                                                                                        HttpMethod = "POST",
+                                                                                                                        //OnBegin = "loadingPanel.Show();",
+                                                                                                                        //OnComplete = "loadingPanel.Hide();",
+                                                                                                                        //UpdateTargetId = "content",
+                                                                                                                        //InsertionMode = InsertionMode.Replace
+                                                                                                                    },
+                                                                                                                    new
+                                                                                                                    {
+                                                                                                                        id = "rqLegsForm",
+                                                                                                                        //@class = "edit_form",
+                                                                                                                        //style = "height: 200px; width: 600px;"
+                                                                                                                    }))
+    {
+        <div id="additionalItemsDiv">
+
+        </div>
+        @Html.HiddenFor(m => m.RateQuote.RateQuoteId)
+        @Html.HiddenFor(m => m.RQStatus)
+        @Html.HiddenFor(m => m.RQTriggerLegFrom)
+        @Html.HiddenFor(m => m.RateQuote.From)
+        @Html.HiddenFor(m => m.RQNewFrom)
+        @Html.HiddenFor(m => m.RQNewTo)
+
+
+        if (Model.RateQuote != null && Model.RateQuote.From != null)
+        {
+            <div id="divLegs" class="form-horizontal">
+                @foreach (var f in Model.RateQuote.From.Split(';'))
+                {
+                    if (!string.IsNullOrWhiteSpace(f))
+                    {
+                        decimal total = 0;
+                        string tblId = "tbl" + Convert.ToString(f);
+                        <table id="@tblId" border="1" style="table-layout:fixed;">
+                            <tbody>
+                                <tr>
+                                    <th class="removeOnPreview" rowspan="@(Model.RqLegs.Count + Model.RqAdditionalItems.Count + 2)">
+                                        <div>
+                                            @*Bind((new APT.BusinessObjects.Models.AllPointsTransportEntities()).APTAddress_Master.ToList()).GetHtml()*@
+
+                                            @*@Html.RadioButton("chkConvert", f, false, new { @group = "chkConvert", @class = "chkConvert", @name = "chkConvert", @onclick= "OnConvertCheckChanged(this)" }) Convert*@
+                                            @Html.DevExpress().RadioButton(settings =>
+                               {
+                                   settings.Name = "rdb-" + f;
+                                   settings.Text = "Convert";
+                                   settings.GroupName = "chkConvert";
+                                   settings.Properties.ClientSideEvents.CheckedChanged = "OnConvertCheckChanged";
+                               }).Bind((new APT.BusinessObjects.Models.RQLeg()).Converted).GetHtml()
+
+                                        </div>
+                                        <div>
+                                            @Html.DevExpress().Button(settings =>
+                               {
+                                   settings.Name = f;
+                                   settings.Text = "Add Legs";
+                                   settings.UseSubmitBehavior = false;
+                                   settings.ClientSideEvents.Click = "function(s,e){triggerFrom=s.name;AddLegPopupControl.Show();}";
+                               }).GetHtml()
+                                        </div>
+                                    </th>
+                                    <th>FROM</th>
+                                    <th>To</th>
+                                    <th>Line Haul ($)</th>
+                                    <th>Fuel Surcharge ($)</th>
+                                    <th>Total ($)</th>
+                                    <th class="removeOnPreview">To Dispatch</th>
+                                </tr>
+                                @for (int i = 0; i <= Model.RqLegs.Count - 1; i++)
+                            {
+                                if (Model.RqLegs[i].RQFrom == f)
+                                {
+                                        <tr>
+                                            <td>
+                                                @Html.HiddenFor(item => item.RqLegs[i].RQLegId)
+                                                @Html.HiddenFor(item => item.RqLegs[i].RQFrom)
+                                                @Html.HiddenFor(item => item.RqLegs[i].LineHaul)
+                                                @Html.HiddenFor(item => item.RqLegs[i].OneWayMiles)
+                                                @Html.HiddenFor(item => item.RqLegs[i].TravelTime)
+
+                                                @Html.TextBoxFor(item => item.RqLegs[i].From, new { @readonly = true, @class = "convertToDivOnPreview" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(item => item.RqLegs[i].To, new { @readonly = true, @class = "convertToDivOnPreview" })
+                                            </td>
+                                            <td class="text-right">
+                                                @Html.TextBoxFor(item => item.RqLegs[i].LineHaul, new { @readonly = true, @class = "convertToDivOnPreview text-right" })
+                                            </td>
+                                            <td class="text-right">
+                                                @Html.TextBoxFor(item => item.RqLegs[i].FuelSurcharge, new { @readonly = true, @class = "convertToDivOnPreview text-right" })
+                                            </td>
+                                            <td class="text-right">
+                                                @Html.TextBoxFor(item => item.RqLegs[i].TotalAmount, new { @readonly = true, @class = "convertToDivOnPreview text-right" })
+                                                @{
+                                                    total = total + Convert.ToDecimal(Model.RqLegs[i].TotalAmount);
+                                                }
+                                            </td>
+                                            <td class="removeOnPreview" align="center">
+                                                @*@if (Model.RqLegs[i].ToDispatch != null)
+                                                {*@
+
+                                                    @Html.CheckBoxFor(item => item.RqLegs[i].ToDispatch)
+                                                @*}
+                                                else
+                                                {
+                                                    var dispatchid = "RqLegs_" + i + "__ToDispatch";
+                                                    <input id="@dispatchid" name="RqLegs[@i].ToDispatch" type="checkbox" />
+                                                }*@
+                                            </td>
+                                        </tr>
+                                                        }
+                                                    }
+                                @for (int i = 0; i <= Model.RqAdditionalItems.Count - 1; i++)
+                            {
+                                    <tr>
+                                        <td colspan="2">
+                                            @Html.HiddenFor(item => item.RqAdditionalItems[i].Id)
+                                            @Html.TextBoxFor(item => item.RqAdditionalItems[i].BillingItem, new { @readonly = true, @class = "convertToDivOnPreview" })
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td class="text-right">
+                                            @Html.HiddenFor(item => item.RqAdditionalItems[i].Quantity)
+                                            @Html.TextBoxFor(item => item.RqAdditionalItems[i].Total, new { @readonly = true, @class = "convertToDivOnPreview text-right" })
+                                            @{
+                                                total = total + Convert.ToDecimal(Model.RqAdditionalItems[i].Total);
+                                            }
+                                        </td>
+                                        <td class="removeOnPreview"></td>
+                                    </tr>
+                                                }
+                                <tr>
+                                    <td colspan="2">
+                                        Total Charge
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td class="text-right">
+                                        @Html.TextBox(f + "TotalAmount", total, new { @readonly = true, @class = "convertToDivOnPreview text-right" })
+                                    </td>
+                                    <td class="removeOnPreview"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">&nbsp;</div>
+                                                    }
+                                                }
+            </div>
+                                                }
+                                                @*}*@
+
+
+                                                @Html.DevExpress().PopupControl(settings =>
+                                           {
+                                               settings.Name = "AddLegPopupControl";
+                                               settings.AllowResize = true;
+                                               settings.ShowHeader = true;
+                                               settings.ShowOnPageLoad = false;
+                                               settings.AllowDragging = true;
+                                               settings.CloseAction = CloseAction.CloseButton;
+                                               settings.CloseOnEscape = true;
+                                               settings.Modal = true;
+                                               settings.Width = 300;
+                                               settings.PopupElementID = "AddLeg";
+                                               settings.HeaderText = "Add Leg";
+                                               settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+                                               settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+                                               settings.SetContent(() =>
+                                               {
+
+
+                                                   @Html.DevExpress().Label(s =>
+                                                   {
+                                                       s.Name = "lblFromNew";
+                                                       s.Text = "From : ";
+                                                   }).Render();
+
+
+                                                   @Html.DevExpress().ComboBox(s =>
+                                                   {
+                                                       s.Name = "NewFromAddrComboBox";
+                                                       s.Properties.DropDownStyle = DropDownStyle.DropDown;
+                                                       s.Properties.ValueField = "Accronym";
+                                                       s.Properties.TextField = "Accronym";
+                                                       s.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                                                       s.Properties.EnableClientSideAPI = true;
+                                                       s.Properties.ClientSideEvents.SelectedIndexChanged = "OnFromAddChange";
+                                                   }).BindList(Model.DefaultAddresses).Render();
+
+                                                   ViewContext.Writer.Write("&nbsp;");
+                                                   @Html.DevExpress().TextBox(s =>
+                                                   {
+                                                       s.Name = "legtxtOthersFrom";
+                                                       s.ClientVisible = false;
+                                                       s.Width = 170;
+                                                   }).Render();
+
+                                                   @Html.DevExpress().Label(s =>
+                                                   {
+                                                       s.Name = "lblToNew";
+                                                       s.Text = "To : ";
+                                                   }).Render();
+
+                                                   @Html.DevExpress().ComboBox(s =>
+                                                   {
+                                                       s.Name = "NewToAddrComboBox";
+                                                       s.Properties.DropDownStyle = DropDownStyle.DropDown;
+                                                       s.Properties.ValueField = "Accronym";
+                                                       s.Properties.TextField = "Accronym";
+                                                       s.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                                                       s.Properties.EnableClientSideAPI = true;
+                                                       s.Properties.ClientSideEvents.SelectedIndexChanged = "OnToAddChange";
+                                                   }).BindList(Model.DefaultAddresses).Render();
+
+                                                   ViewContext.Writer.Write("&nbsp;");
+
+                                                   @Html.DevExpress().TextBox(s =>
+                                                   {
+                                                       s.Name = "legtxtOthersTo";
+                                                       s.ClientVisible = false;
+                                                       s.Width = 170;
+                                                   }).Render();
+
+
+                                                   ViewContext.Writer.Write("<br/>");
+                                                   @Html.DevExpress().Button(s =>
+                                                   {
+                                                       s.Name = "AddNewLeg";
+                                                       s.Text = "Add";
+                                                       s.UseSubmitBehavior = false;
+                                                       s.ClientSideEvents.Click = "AddNewLegClick";
+                                                   }).Render();
+                                                   ViewContext.Writer.Write("&nbsp;");
+                                                   @Html.DevExpress().Button(s =>
+                                                   {
+                                                       s.Name = "Cancelpopup";
+                                                       s.Text = "Cancel";
+                                                       s.UseSubmitBehavior = false;
+                                                       s.ClientSideEvents.Click = "function(s,e){AddLegPopupControl.Hide();}";
+                                                   }).Render();
+
+
+                                               });
+                                           }).GetHtml()
+                                                }
+</div>

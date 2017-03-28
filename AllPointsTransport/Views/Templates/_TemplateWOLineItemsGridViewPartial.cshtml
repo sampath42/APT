@@ -1,0 +1,65 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "TemplateWOLineItemsGridView2";
+        settings.CallbackRouteValues = new { Controller = "Templates", Action = "TemplateWOLineItemsGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Templates", Action = "TemplateWOLineItemsGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Templates", Action = "TemplateWOLineItemsGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Templates", Action = "TemplateWOLineItemsGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        //settings.Columns.Add("ID");
+        settings.Columns.Add("TemplateName");
+        //settings.Columns.Add("RowOrder");
+        settings.Columns.Add(column =>
+        {
+
+            column.FieldName = "BillingItem";
+            column.Caption = "BillingItem";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+
+            comboBoxProperties.DataSource = ViewBag.BillingItem;
+
+            comboBoxProperties.ValueType = typeof(string);
+
+
+        });
+        settings.Columns.Add("Description");
+        settings.Columns.Add("Vendor");
+        //settings.Columns.Add("VendorReference");
+        settings.Columns.Add("Quantity");
+        settings.Columns.Add("Rate");
+        settings.Columns.Add("Amount");
+        settings.Columns.Add("Fee");
+        //	settings.Columns.Add("PayDriver");
+        //	settings.Columns.Add("DateCreated");
+        //settings.Columns.Add("CreatedBy");
+        //settings.Columns.Add("DateUpdated");
+        //settings.Columns.Add("UpdatedBy");
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

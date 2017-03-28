@@ -1,0 +1,38 @@
+﻿@model APT.BusinessObjects.Models.WorkOrder
+@{
+    ViewBag.Title = "Work Orders";
+   
+}
+
+
+
+@Html.ActionLink("Add WorkOrder", "Create")
+<div class="row">
+
+    <div class="span12">
+
+        <div class="widget">
+
+            <div class="widget-header">
+                <i class="icon-tasks"></i>
+                <h3>WorkOrders List</h3>
+            </div> <!-- /widget-header -->
+
+            <div class="widget-content" style="overflow: scroll">
+
+
+
+               @Html.Action("WorkOrderViewPartial")
+                            @* <canvas id="pie-chart" class="chart-holder" height="250" width="538"></canvas>*@
+            </div> <!-- /widget-content -->
+
+        </div> <!-- /widget -->
+
+
+
+
+    </div> <!-- /span6 -->
+
+</div>
+
+

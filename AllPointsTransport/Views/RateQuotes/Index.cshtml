@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .center {
+        margin: auto;
+        width: 60%;
+
+        padding: 10px;
+    }
+</style>
+<h2>Rate Quotes</h2>
+<div class="center">
+
+    @Html.ActionLink("Create New", "Create")
+    @Html.Action("RateQuotesListPartial")
+</div>
+

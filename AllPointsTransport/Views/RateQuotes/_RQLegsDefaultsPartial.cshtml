@@ -1,0 +1,37 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "RQLegsDefaults";
+        settings.CallbackRouteValues = new { Controller = "RateQuotes", Action = "RQLegsDefaultsPartial" };
+
+
+        settings.KeyFieldName = "Id";
+
+        settings.SettingsPager.Visible = false;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "FROM"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "From"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "TO"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "To"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Base Fare"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "BaseFare";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Fuel Surcharge(17%)"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "FuelSurcharge";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Chasis Fee"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "ChasisFees";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Additional Fare"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "AdditionalFare";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Total Amount"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "TotalAmount";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "One-Way Miles"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "OneWayMiles"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "Travel Time"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "TravelTime"; });
+        settings.Columns.Add(settingsCol => { settingsCol.Caption = "One-Way Base"; settingsCol.HeaderStyle.Font.Bold = true; settingsCol.FieldName = "OneWayBase";settingsCol.PropertiesEdit.DisplayFormatString = "c"; });
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowSelectCheckbox = true;
+
+        settings.ClientSideEvents.SelectionChanged = "SelectionChanged";
+    });
+}
+@grid.Bind(Model).GetHtml()

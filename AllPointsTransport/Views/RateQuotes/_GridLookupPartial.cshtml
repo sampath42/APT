@@ -1,0 +1,41 @@
+@{
+    var gridLookup = Html.DevExpress().GridLookup(settings => {
+        settings.Name = "GridLookupRQ";
+        settings.KeyFieldName = "ContactID";
+
+        settings.GridViewProperties.CallbackRouteValues = new { Controller = "RateQuotes", Action = "GridLookupPartial" };
+        settings.Properties.SelectionMode = GridLookupSelectionMode.Single;
+        settings.Properties.TextFormatString = "{0}";
+
+        settings.GridViewProperties.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.SetHeaderTemplateContent(c =>
+        {
+            ViewContext.Writer.Write(
+                //Html.ActionLink("New", "GridLookupPartialAddNew", new { ContactID = -1 }).ToHtmlString()
+                "<a href='#'>New</a>"
+            );
+        });
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.GridViewProperties.SettingsPager.Visible = true;
+        settings.GridViewProperties.Settings.ShowGroupPanel = true;
+        settings.GridViewProperties.Settings.ShowFilterRow = true;
+
+        settings.Columns.Add("Company");
+        settings.Columns.Add("BillTo");
+        settings.Columns.Add("Contact1");
+        settings.Columns.Add("Phone1");
+        settings.Columns.Add("Email1");
+        settings.Columns.Add("Contact2");
+        settings.Columns.Add("Phone2");
+        settings.Columns.Add("Email2");
+        settings.CommandColumn.ShowSelectCheckbox = true;
+        settings.GridViewClientSideEvents.RowClick  = "getBillToRQ";               
+    });
+    if (ViewData["EditError"] != null){
+        gridLookup.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@gridLookup.BindList(Model).GetHtml()
